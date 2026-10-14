@@ -58,8 +58,13 @@ describe('App MCP protocol',()=>{
  };
  it('initializes and exposes the card without using host IP or counting',async()=>{
   const init=await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'test',version:'1'}});expect(init.result.serverInfo.name).toContain('17NAS');
-  const list=await rpc('tools/list');expect(list.result.tools.map((t:any)=>t.name)).toEqual(['check_network']);
-  const call=await rpc('tools/call',{name:'check_network',arguments:{locale:'zh-HK'}});expect(call.error).toBeUndefined();expect(call.result.structuredContent.locale).toBe('zh-TW');expect(call.result.structuredContent.region).toBe('XX');expect(call.result.structuredContent.myRank).toBeNull();
+  const list=await rpc('tools/list');expect(list.result.tools.map((t:any)=>t.name)).toEqual(['check_ipv6_connection','get_network_region','check_nat','get_ipv6_statistics','check_network']);
+  const call=await rpc('tools/call',{name:'check_network',arguments:{locale:'zh-HK'}});expect(call.error).toBeUndefined();expect(call.result.structuredContent.locale).toBe('zh-TW');expect(call.result.structuredContent.region).toBe('XX');expect(call.result.structuredContent.myRank).toBeNull();expect(call.result.structuredContent.cardKind).toBe('combined');
+  for(const [name,kind] of [['check_nat','nat'],['get_network_region','network'],['check_ipv6_connection','connection'],['get_ipv6_statistics','statistics']]){
+   const result=await rpc('tools/call',{name,arguments:name==='get_ipv6_statistics'?{country:'DE'}:{}});expect(result.result.structuredContent.cardKind).toBe(kind);expect(result.result.structuredContent.myRank).toBeNull();
+   expect(result.result.structuredContent.requestedCountry).toBe(name==='get_ipv6_statistics'?'DE':null);
+  }
+  const invalid=await rpc('tools/call',{name:'get_network_region',arguments:{ip:'1.2.3.4'}});expect(invalid.result.isError).toBe(true);
   const resource=await rpc('resources/read',{uri:'ui://17nas/ipv6-card.html'});expect(resource.result.contents[0].text).toContain('<html');
   const meta=resource.result.contents[0]._meta;
   expect(meta.ui.csp.resourceDomains).toEqual([bindings.PUBLIC_ORIGIN]);

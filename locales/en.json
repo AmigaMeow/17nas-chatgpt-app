@@ -4,7 +4,7 @@
   "check": "Check IPv6 support",
   "checking": "Checking your connection…",
   "loading": "Loading regional statistics…",
-  "supported": "Your connection supports IPv6",
+  "supported": "This browser can reach IPv6",
   "unsupported": "IPv6 unavailable on this connection",
   "unknown": "Unknown",
   "region": "Your region",
@@ -58,8 +58,16 @@
   "sampleDetails": "17NAS observations & methodology",
   "sampleContext": "These voluntary 17NAS samples describe participating connections, not every connection in the region.",
   "checkHelp": "Check whether this connection can reach an IPv6 service.",
-  "supportedHelp": "This connection reached our IPv6 service. Remote access to your NAS needs a separate check.",
-  "unverifiedHelp": "This check could not confirm IPv6. Check your router and ISP settings, then try again.",
+  "supportedHelp": "This browser reached the dedicated IPv6-only probe. This result applies to that connection and does not establish general inbound reachability.",
+  "unverifiedHelp": "This browser could not confirm reachability to the IPv6 probe. Network, sandbox or request restrictions can cause this; it does not prove IPv6 is unsupported.",
   "recheck": "Recheck IPv6",
-  "regionalContext": "Country-level statistics · background reference, separate from your connection test."
+  "regionalContext": "Country-level statistics · background reference, separate from your connection test.",
+  "aboutData": "About this tool",
+  "networkTitle": "Network region",
+  "networkPending": "Finding the browser connection country…",
+  "networkHelp": "Country estimate from this browser request. VPNs and proxies may change it. IP addresses and ASN are not displayed.",
+  "natTitle": "Check your NAT type",
+  "natDescription": "NAT needs a separate browser test. This card does not determine your NAT type.",
+  "natCaveat": "Open the 17NAS test page to run the test and read its result.",
+  "natLink": "Open NAT test"
 }

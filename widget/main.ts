@@ -1,11 +1,14 @@
 import { App } from '@modelcontextprotocol/ext-apps';
-import { countryName,dictionaries,normalizeLocale,number,strings,type Locale } from '../src/i18n';
+import { countryName,normalizeLocale,number,strings,type Locale } from '../src/i18n';
 
-type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:number;status:string;updatedAt:string|null;stale:boolean;statisticsAvailable:boolean;globalRank:number|null;apnic:{ipv6Rate:number|null;globalRate:number|null;dataDate:string|null;rankingScope:string|null;top5:{region:string;ipv6Rate:number;globalRank:number}[]}}&{todayQueries?:number|null;myRank?:number|null;counted?:boolean;probeUrl?:string|null;apiOrigin?:string;locale?:string};
+type CardKind='connection'|'network'|'nat'|'statistics'|'combined';
+type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:number;status:string;updatedAt:string|null;stale:boolean;statisticsAvailable:boolean;globalRank:number|null;apnic:{ipv6Rate:number|null;globalRate:number|null;dataDate:string|null;rankingScope:string|null;top5:{region:string;ipv6Rate:number;globalRank:number}[]}}&{cardKind?:CardKind;requestedCountry?:string|null;todayQueries?:number|null;myRank?:number|null;counted?:boolean;probeUrl?:string|null;apiOrigin?:string;locale?:string};
 declare global {interface Window {openai?:{locale?:string;toolOutput?:Data};}}
 let locale:Locale=normalizeLocale(window.openai?.locale);
 let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false, checked=false;
 let clientStatus='unknown';
+let cardKind:CardKind='combined',requestedCountry:string|null=null,started=false;
+const hasProbe=()=>cardKind==='connection'||cardKind==='combined';
 let origin=window.parent!==window?'https://app.17nas.com':location.origin,probeUrl:string|null=null;
 const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.1.0'});
 const el=(id:string)=>document.getElementById(id)!;
@@ -19,30 +22,40 @@ function date(value:string|null|undefined) {
 }
 function render() {
  document.documentElement.lang=locale;
- el('language').setAttribute('aria-label',strings(locale).language);
  const s=strings(locale);
- for(const id of ['title','subtitle','sampleDetails','sampleContext','ownTitle','apnicTitle','footerSummary','diagnosticsTitle','details','privacy','terms'])text(id,s[id as keyof typeof s]);
+ for(const id of ['title','aboutData','sampleDetails','sampleContext','ownTitle','apnicTitle','footerSummary','diagnosticsTitle','details','privacy','terms','networkTitle','networkHelp','natTitle','natDescription','natCaveat','natLink'])text(id,s[id as keyof typeof s]);
  text('translation',s._status==='pending_professional_translation'?s.translationPending:'');
- text('preview',connected?'':s.preview);
- el('brand').hidden=window.parent!==window;
+ el('detection').hidden=!hasProbe();
+ el('check').hidden=!hasProbe();
+ el('networkPanel').hidden=cardKind!=='network'&&cardKind!=='combined';
+ el('natPanel').hidden=cardKind!=='nat';
+ el('statisticsPanel').hidden=cardKind!=='statistics';
+ el('querySummary').hidden=true; // Query ordinals are secondary, available in the details only.
+ el('sourceDetails').hidden=cardKind!=='statistics';
+ el('regionalContext').hidden=cardKind!=='statistics';
+ el('checkHelp').hidden=!hasProbe();
+ el('country').hidden=cardKind==='nat'||cardKind==='statistics';
  const state=busy||loading?'checking':clientStatus;
  el('status').dataset.state=state;
  text('status',busy||loading?s.checking:state==='supported'?s.supported:state==='unsupported'?s.unsupported:s.unverified);
  text('check',s.recheck);(el('check') as HTMLButtonElement).disabled=busy||loading;
- text('loading',loading?s.loading:'');
+ text('loading',loading?(cardKind==='network'?s.networkPending:hasProbe()?s.checking:s.loading):'');
  text('checkHelp',!checked?s.checkHelp:state==='supported'?s.supportedHelp:s.unverifiedHelp);
  if(busy||loading)text('checkHelp',s.checking);
  const region=countryName(data?.region??'XX',locale);
  text('rank',data?.myRank!=null?format('queryRank',{rank:number(data.myRank,locale),region}):checked&&!busy?s.queryUnavailable:s.queryPending);
  text('count',data?.todayQueries!=null?`${s.queriesToday}: ${number(data.todayQueries,locale)}${data.counted===false?` · ${s.queryRepeated}`:''}`:'');
- text('error',errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&data&&!data.statisticsAvailable?s.statsError:''));
+ text('detailRank',el('rank').textContent??'');text('detailCount',el('count').textContent??'');el('countDetails').hidden=cardKind==='statistics'||cardKind==='nat'||data?.myRank==null;
+ text('error',errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&cardKind==='statistics'&&data&&!data.statisticsAvailable?s.statsError:''));
  el('diagnostics').hidden=!el('error').textContent;
  text('country',`${s.region}: ${region}`);
+ text('networkRegion',loading?s.networkPending:region);
+ (el('details') as HTMLAnchorElement).hidden=cardKind!=='statistics';
  text('regionalTitle',format('regionalTitle',{region}));
  text('regionalContext',s.regionalContext);
  const regionalRate=data?.apnic.ipv6Rate;
  const hasOwnRate=data?.ipv6Rate!=null;
- el('sampleModule').hidden=!hasOwnRate;
+ el('sampleModule').hidden=cardKind!=='statistics'||!hasOwnRate;
  el('regionalPanel').hidden=loading||(regionalRate==null&&!hasOwnRate);
  el('regionalRate').hidden=regionalRate==null;
  text('regionalRate',regionalRate!=null?`${s.regionalRate}: ${number(regionalRate,locale)}%`:s.regionalMissing);
@@ -74,25 +87,26 @@ function render() {
  text('cached',data?.stale?s.cached:'');
  (el('privacy') as HTMLAnchorElement).href=`${origin}/privacy.html`;
  (el('terms') as HTMLAnchorElement).href=`${origin}/terms.html`;
- (el('language') as HTMLSelectElement).value=locale;
 }
 async function api(path:string,method='GET'):Promise<Data&{probeUrl?:string|null}> {
- const response=await fetch(`${origin}${path}?locale=${encodeURIComponent(locale)}`,{method,credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(1800),...(method==='POST'?{headers:{'Content-Type':'application/json'},body:'{}'}:{})});
+ const url=new URL(path,origin);url.searchParams.set('locale',locale);
+ const response=await fetch(url,{method,credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(1800),...(method==='POST'?{headers:{'Content-Type':'application/json'},body:'{}'}:{})});
  if(!response.ok)throw new Error(response.status===429?'rateLimit':'networkError');
  return response.json();
 }
 function apply(value:Data) {
  // Late host tool results must not overwrite browser detection or the country counter.
- if(!checked)data=value;
+ if(!started){data=value;cardKind=value.cardKind??'combined';requestedCountry=value.requestedCountry??null;}
  if(value.locale)locale=normalizeLocale(value.locale);
  // Only the trusted App origin (or the current standalone origin) can be contacted.
  if(value.apiOrigin==='https://app.17nas.com')origin=value.apiOrigin;
  probeUrl=value.probeUrl??probeUrl;
  render();
+ if(connected&&!started)void start();
 }
 async function refresh() {
  loading=true;render();
- try {const [result,config]=await Promise.allSettled([api('/api/ipv6-rank'),api('/api/config')]);
+ try {const [result,config]=await Promise.allSettled([api('/api/ipv6-rank'+(requestedCountry?'?region='+encodeURIComponent(requestedCountry):'')),hasProbe()?api('/api/config'):Promise.resolve({probeUrl:null})]);
   if(result.status==='fulfilled')data=result.value;
   if(config.status==='fulfilled')probeUrl=config.value.probeUrl??null;
   errorKey=result.status==='rejected'?'statsError':'';
@@ -125,10 +139,6 @@ async function check() {
  }catch(e){errorKey=e instanceof Error?e.message:'networkError';}
  finally{busy=false;render();}
 }
-const selector=el('language') as HTMLSelectElement;
-for(const code of Object.keys(dictionaries) as Locale[]){const option=document.createElement('option');option.value=code;option.textContent=new Intl.DisplayNames([code],{type:'language'}).of(code)??code;selector.append(option);}
-selector.setAttribute('aria-label',strings(locale).language);
-selector.onchange=()=>{locale=normalizeLocale(selector.value);render();};
 el('check').onclick=check;
 app.ontoolresult=({structuredContent})=>{if(structuredContent)apply(structuredContent as Data);};
 app.onhostcontextchanged=context=>{if(context.locale)locale=normalizeLocale(context.locale);render();};
@@ -138,5 +148,19 @@ if(window.parent!==window) {
  try {await Promise.race([app.connect(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('HOST_TIMEOUT')),1800))]);connected=true;locale=normalizeLocale(app.getHostContext()?.locale??window.openai?.locale);render();}
  catch {errorKey='networkError';render();}
 }
-await refresh();
-await check();
+async function start() {
+ if(started)return;started=true;
+ if(cardKind==='nat'){loading=false;render();return;}
+ if(cardKind==='statistics'){await refresh();return;}
+ if(cardKind==='network') {
+  try{data=await api('/api/ipv6-query','POST');checked=true;
+   if(connected)void app.updateModelContext({content:[{type:'text',text:JSON.stringify({region:data.region,source:'Current browser request',ipAndAsnNotAvailable:true})}]}).catch(()=>{});
+  }
+  catch(e){errorKey=e instanceof Error?e.message:'networkError';}
+  finally{loading=false;render();}
+  return;
+ }
+ await refresh();await check();
+}
+// Embedded cards wait for their tool payload, so NAT/statistics never accidentally probe.
+if(window.parent===window||data)await start();

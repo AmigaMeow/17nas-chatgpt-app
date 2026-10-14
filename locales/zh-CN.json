@@ -4,7 +4,7 @@
   "check": "检测 IPv6 支持",
   "checking": "正在检测连接…",
   "loading": "正在加载地区统计…",
-  "supported": "你的网络支持 IPv6",
+  "supported": "当前浏览器可连接 IPv6",
   "unsupported": "当前连接无法使用 IPv6",
   "unknown": "未知",
   "region": "你的地区",
@@ -58,8 +58,16 @@
   "sampleDetails": "17NAS 观测与统计说明",
   "sampleContext": "这些是主动参与 17NAS 测试的连接样本，不代表本地区所有连接。",
   "checkHelp": "检测当前连接能否访问 IPv6 服务。",
-  "supportedHelp": "当前连接已成功访问 IPv6 服务。NAS 能否从外网访问，还需要单独检查。",
-  "unverifiedHelp": "本次未能确认 IPv6，可检查路由器和运营商设置后再试。",
+  "supportedHelp": "当前浏览器已连接到专用 IPv6 探测服务。结果仅说明此次连接可达，不代表设备可以被外网访问。",
+  "unverifiedHelp": "当前浏览器未能确认到 IPv6 探测服务的连接。网络、沙盒或请求限制都可能导致失败，不能据此判定不支持 IPv6。",
   "recheck": "重新检测",
-  "regionalContext": "国家级统计 · 背景参考，与上方个人网络检测结果独立。"
+  "regionalContext": "国家级统计 · 背景参考，与上方个人网络检测结果独立。",
+  "aboutData": "关于此工具",
+  "networkTitle": "网络归属",
+  "networkPending": "正在确认当前浏览器连接所属国家…",
+  "networkHelp": "根据当前浏览器请求估计国家。VPN 或代理可能影响结果；不展示 IP 地址和 ASN。",
+  "natTitle": "检测 NAT 类型",
+  "natDescription": "NAT 需要单独在浏览器中测试。这张卡片没有检测你的 NAT 类型。",
+  "natCaveat": "打开 17NAS 测试页，运行检测并查看结果。",
+  "natLink": "打开 NAT 测试"
 }

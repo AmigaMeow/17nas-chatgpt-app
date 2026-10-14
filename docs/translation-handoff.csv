@@ -4,19 +4,19 @@ subtitle,Check your connection. Explore your region.,,,,,,pending_professional_t
 check,Check IPv6 support,,,,,,pending_professional_translation
 checking,Checking your connection…,,,,,,pending_professional_translation
 loading,Loading regional statistics…,,,,,,pending_professional_translation
-supported,IPv6 supported,,,,,,pending_professional_translation
+supported,This browser can reach IPv6,,,,,,pending_professional_translation
 unsupported,IPv6 unavailable on this connection,,,,,,pending_professional_translation
 unknown,Unknown,,,,,,pending_professional_translation
 region,Your region,,,,,,pending_professional_translation
 queryRank,Today's query #{rank} in {region},,,,,,pending_professional_translation
-queryPending,Your query number appears after you check.,,,,,,pending_professional_translation
+queryPending,Getting your query number…,,,,,,pending_professional_translation
 queryRepeated,Already counted within the past hour.,,,,,,pending_professional_translation
 queryUnavailable,The query counter is unavailable. Please try again.,,,,,,pending_professional_translation
 queriesToday,Queries today,,,,,,pending_professional_translation
 ownTitle,17NAS regional IPv6 samples,,,,,,pending_professional_translation
 apnicTitle,Global IPv6 Top 5,,,,,,pending_professional_translation
 ownRate,IPv6 reachability,,,,,,pending_professional_translation
-insufficient,Insufficient data (at least 300 samples required),,,,,,pending_professional_translation
+insufficient,Not enough local observations to publish a reliable rate yet.,,,,,,pending_professional_translation
 samples,{count} samples · last 30 days,,,,,,pending_professional_translation
 source,Source,,,,,,pending_professional_translation
 updated,Updated,,,,,,pending_professional_translation
@@ -48,3 +48,24 @@ notStarted,Ready to check IPv6,,,,,,pending_professional_translation
 unverified,IPv6 status not verified,,,,,,pending_professional_translation
 diagnosticsTitle,Connection diagnostics,,,,,,pending_professional_translation
 footerSummary,No IPs saved · HMAC expires within 1 hour · UTC counts,,,,,,pending_professional_translation
+regionalTitle,{region} IPv6 adoption,,,,,,pending_professional_translation
+regionalRate,IPv6 availability · APNIC Labs,,,,,,pending_professional_translation
+regionalMissing,Regional statistics are not available yet.,,,,,,pending_professional_translation
+aboveGlobal,{difference} percentage points above the global rate,,,,,,pending_professional_translation
+belowGlobal,{difference} percentage points below the global rate,,,,,,pending_professional_translation
+equalGlobal,Matches the global rate,,,,,,pending_professional_translation
+sampleDetails,17NAS observations & methodology,,,,,,pending_professional_translation
+sampleContext,"These voluntary 17NAS samples describe participating connections, not every connection in the region.",,,,,,pending_professional_translation
+checkHelp,Check whether this connection can reach an IPv6 service.,,,,,,pending_professional_translation
+supportedHelp,This browser reached the dedicated IPv6-only probe. This result applies to that connection and does not establish general inbound reachability.,,,,,,pending_professional_translation
+unverifiedHelp,"This browser could not confirm reachability to the IPv6 probe. Network, sandbox or request restrictions can cause this; it does not prove IPv6 is unsupported.",,,,,,pending_professional_translation
+recheck,Recheck IPv6,,,,,,pending_professional_translation
+regionalContext,"Country-level statistics · background reference, separate from your connection test.",,,,,,pending_professional_translation
+aboutData,About this tool,,,,,,pending_professional_translation
+networkTitle,Network region,,,,,,pending_professional_translation
+networkPending,Finding the browser connection country…,,,,,,pending_professional_translation
+networkHelp,Country estimate from this browser request. VPNs and proxies may change it. IP addresses and ASN are not displayed.,,,,,,pending_professional_translation
+natTitle,Check your NAT type,,,,,,pending_professional_translation
+natDescription,NAT needs a separate browser test. This card does not determine your NAT type.,,,,,,pending_professional_translation
+natCaveat,Open the 17NAS test page to run the test and read its result.,,,,,,pending_professional_translation
+natLink,Open NAT test,,,,,,pending_professional_translation

@@ -47,7 +47,7 @@ No endpoint accepts an IP parameter, explicit country override for counting, coo
 | `POST /api/ipv6-query?locale=zh-CN` | Body `{}`; count the source country query once per hour |
 | `GET /api/config` | Configured dedicated probe URL |
 | `GET /api/probe` | Confirm whether the source connection reaching this endpoint was IPv6 |
-| `POST /mcp` | Stateless MCP, `check_network` tool and inline HTML resource |
+| `POST /mcp` | Stateless MCP, five intent-specific tools and shared inline HTML resource |
 
 Results include `region`, `ipv6Status`, own `ipv6Rate`, `todayQueries`, `myRank`, `globalRank`, own sample metadata, separate `apnic` metadata/Top 5, source timestamps and cache state. POST also provides `rank`, `total`, and `counted`. A duplicate across midnight has no ordinal for the new day. Optional `locale` selects localized error messages. API CORS permits credentials-free browser calls. The eleventh request for one source in a UTC minute receives 429; other errors are sanitized and localized.
 
@@ -77,6 +77,16 @@ See `docs/deployment.md`, `docs/launch-gates.md`, `docs/submission.md`, and `doc
 
 Ranking flags use the SVG assets from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT). Assets and their license are bundled and served by the App origin; no flag CDN is contacted. Missing flag assets fall back to the country name.
 
-### Automatic connection check
+### Intent-specific conversation cards
 
-The inline card shows a checking state on mount and automatically probes the dedicated IPv6-only endpoint while recording a country query (hourly deduplication applies). Recheck is an optional retry. Server tool calls originate from the AI host and cannot measure the user connection. Country APNIC adoption is labeled as separate background context. Probe failures remain unknown, including sandbox/CORS/network failures. After detection, the card sends an address-free result summary through `updateModelContext`; this does not rewrite an already delivered assistant message. Real ChatGPT sandbox connectivity still requires deployment validation.
+| Tool | Card behavior |
+| --- | --- |
+| `check_ipv6_connection` | Automatically probe this browser connection; optional recheck |
+| `get_network_region` | Determine the current browser request country; no IP/ASN or IPv6 probe |
+| `check_nat` | Explain the limitation and link to the separate browser NAT test; no detection or counting |
+| `get_ipv6_statistics` | Country APNIC comparison and global Top 5; optional ISO country input; no probe or counting |
+| `check_network` | Combine browser connection and country attribution |
+
+Only cards that check connectivity automatically contact the configured IPv6-only endpoint. Counting applies to connection and country attribution requests, with hourly deduplication. Server tool calls originate from the AI host and cannot measure the user connection or locate the user. Browser results are sent through address-free `updateModelContext`; this does not rewrite an already delivered assistant message. Failed probes remain unknown, including sandbox/CORS/network failures. Real ChatGPT sandbox connectivity still requires deployment validation.
+
+Cards follow the host locale without a language selector. Query ordinals, source dates, ranking scope, publishable own sample methodology and legal links are available through native expandable details. Own samples below the threshold are hidden entirely and never replaced by APNIC values. There is no development banner or unrelated NAS guidance. The standalone preview uses the same compact layout.
