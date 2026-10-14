@@ -10,3 +10,4 @@
 - Document remaining failure-mode, retention, credential and submission launch gates.
 - Fix inline bundle replacement and validate the final widget script during builds.
 - Refine card hierarchy, contrast, diagnostics, ranking bars, mobile layout and compact privacy links; add localized initial and unverified detection states.
+- Unify the card palette around dark green and grayscale, separate the brand/language header from the title, and apply shared card styling and spacing to query statistics.
