@@ -8,3 +8,5 @@
 - Add eight locale structures, translation handoff and owner-review legal drafts.
 - Add Worker protocol, privacy, cache, concurrency and UTC boundary tests.
 - Document remaining failure-mode, retention, credential and submission launch gates.
+- Fix inline bundle replacement and validate the final widget script during builds.
+- Refine card hierarchy, contrast, diagnostics, ranking bars, mobile layout and compact privacy links; add localized initial and unverified detection states.

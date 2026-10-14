@@ -4,7 +4,7 @@ import { countryName,dictionaries,normalizeLocale,number,strings,type Locale } f
 type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:number;status:string;updatedAt:string|null;stale:boolean;statisticsAvailable:boolean;globalRank:number|null;apnic:{ipv6Rate:number|null;globalRate:number|null;dataDate:string|null;rankingScope:string|null;top5:{region:string;ipv6Rate:number;globalRank:number}[]}}&{todayQueries?:number|null;myRank?:number|null;counted?:boolean;probeUrl?:string|null;apiOrigin?:string;locale?:string};
 declare global {interface Window {openai?:{locale?:string;toolOutput?:Data};}}
 let locale:Locale=normalizeLocale(window.openai?.locale);
-let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false;
+let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false, checked=false;
 let origin=window.parent!==window?'https://app.17nas.com':location.origin,probeUrl:string|null=null;
 const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.1.0'});
 const el=(id:string)=>document.getElementById(id)!;
@@ -20,24 +20,29 @@ function render() {
  document.documentElement.lang=locale;
  el('language').setAttribute('aria-label',strings(locale).language);
  const s=strings(locale);
- for(const id of ['title','subtitle','ownTitle','apnicTitle','privacyShort','dedupNotice','dateUtc','details','privacy','terms'])text(id,s[id as keyof typeof s]);
+ for(const id of ['title','subtitle','ownTitle','apnicTitle','footerSummary','diagnosticsTitle','details','privacy','terms'])text(id,s[id as keyof typeof s]);
  text('translation',s._status==='pending_professional_translation'?s.translationPending:'');
  text('preview',connected?'':s.preview);
- text('status',busy?s.checking:data?.ipv6Status==='supported'?s.supported:data?.ipv6Status==='unsupported'?s.unsupported:s.unknown);
+ const state=busy?'checking':!checked?'notStarted':data?.ipv6Status??'unknown';
+ el('status').dataset.state=state;
+ text('status',busy?s.checking:!checked?s.notStarted:state==='supported'?s.supported:state==='unsupported'?s.unsupported:s.unverified);
  text('check',busy?s.checking:s.check);(el('check') as HTMLButtonElement).disabled=busy;
  text('loading',loading?s.loading:'');
  const region=countryName(data?.region??'XX',locale);
  text('rank',data?.myRank!=null?format('queryRank',{rank:number(data.myRank,locale),region}):s.queryPending);
  text('count',data?.todayQueries!=null?`${s.queriesToday}: ${number(data.todayQueries,locale)}${data.counted===false?` · ${s.queryRepeated}`:''}`:'');
  text('error',errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&data&&!data.statisticsAvailable?s.statsError:''));
+ el('diagnostics').hidden=!el('error').textContent;
  text('country',`${s.region}: ${region}`);
  text('ownRate',data?.ipv6Rate!=null?`${s.ownRate}: ${number(data.ipv6Rate,locale)}%`:s.insufficient);
  const progress=el('progress') as HTMLProgressElement;progress.hidden=data?.ipv6Rate==null;if(data?.ipv6Rate!=null)progress.value=data.ipv6Rate;progress.setAttribute('aria-label',s.ownRate);
  text('samples',format('samples',{count:number(data?.sampleCount??0,locale)}));
  text('ownUpdated',`${s.source}: 17NAS · ${s.updated}: ${date(data?.updatedAt)}`);
  el('top').replaceChildren(...(data?.apnic.top5??[]).map(row=>{
-  const li=document.createElement('li'),name=document.createElement('span'),rate=document.createElement('strong');
-  name.textContent=`${format('rankPosition',{rank:number(row.globalRank,locale)})} ${countryName(row.region,locale)}`;rate.textContent=`${number(row.ipv6Rate,locale)}%`;li.append(name,rate);return li;
+  const li=document.createElement('li'),position=document.createElement('span'),name=document.createElement('span'),rate=document.createElement('strong'),bar=document.createElement('progress');
+  position.className='position';position.textContent=number(row.globalRank,locale);
+  name.textContent=countryName(row.region,locale);rate.className='rate';rate.textContent=`${number(row.ipv6Rate,locale)}%`;
+  bar.max=100;bar.value=row.ipv6Rate;bar.setAttribute('aria-label',`${name.textContent}: ${s.ownRate}`);li.append(position,name,rate,bar);return li;
  }));
  text('globalRank',data?.globalRank?format('globalRank',{rank:number(data.globalRank,locale)}):'');
  text('apnicUpdated',`${s.source}: APNIC Labs · ${s.updated}: ${data?.apnic.dataDate?new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(data.apnic.dataDate)):s.unknown}`);
@@ -68,7 +73,7 @@ async function refresh() {
  finally{loading=false;render();}
 }
 async function check() {
- busy=true;errorKey='';render();
+ busy=true;checked=true;errorKey='';render();
  try {
   const probe=async()=>{
    if(!probeUrl)return 'unknown';

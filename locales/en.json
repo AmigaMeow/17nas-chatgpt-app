@@ -44,5 +44,9 @@
   "operator": "Operated by jiahui zhang",
   "contact": "Contact: hello@17nas.com",
   "_status": "draft_for_owner_review",
-  "rankingScope": "Ranking scope: countries and territories in this APNIC snapshot"
+  "rankingScope": "Ranking scope: countries and territories in this APNIC snapshot",
+  "notStarted": "Ready to check IPv6",
+  "unverified": "IPv6 status not verified",
+  "diagnosticsTitle": "Connection diagnostics",
+  "footerSummary": "No IPs saved · HMAC expires within 1 hour · UTC counts"
 }
