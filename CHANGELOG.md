@@ -14,3 +14,4 @@
 - Bundle SVG country flags with their MIT license, allow App-origin images in the embedded card CSP, and retain country names when flags fail to load. Clarify the Chinese APNIC dataset wording.
 - Lead the regional card with explicitly labeled APNIC country availability and its difference from the global rate; move voluntary 17NAS sample sizes and methodology into expandable details. Add detection guidance and use 17NAS.com branding only in standalone previews.
 - Hide the entire 17NAS sample module when no publishable rate is available; hide the regional card when neither source has a usable country rate. Never substitute APNIC values for 17NAS observations.
+- Automatically probe the browser connection and count a query on card mount; make rechecking secondary, preserve probe results if counting fails, and distinguish personal connectivity from country adoption.

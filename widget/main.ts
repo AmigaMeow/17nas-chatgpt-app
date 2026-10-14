@@ -5,6 +5,7 @@ type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:numb
 declare global {interface Window {openai?:{locale?:string;toolOutput?:Data};}}
 let locale:Locale=normalizeLocale(window.openai?.locale);
 let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false, checked=false;
+let clientStatus='unknown';
 let origin=window.parent!==window?'https://app.17nas.com':location.origin,probeUrl:string|null=null;
 const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.1.0'});
 const el=(id:string)=>document.getElementById(id)!;
@@ -20,23 +21,25 @@ function render() {
  document.documentElement.lang=locale;
  el('language').setAttribute('aria-label',strings(locale).language);
  const s=strings(locale);
- for(const id of ['title','subtitle','regionalTitle','sampleDetails','sampleContext','ownTitle','apnicTitle','footerSummary','diagnosticsTitle','details','privacy','terms'])text(id,s[id as keyof typeof s]);
+ for(const id of ['title','subtitle','sampleDetails','sampleContext','ownTitle','apnicTitle','footerSummary','diagnosticsTitle','details','privacy','terms'])text(id,s[id as keyof typeof s]);
  text('translation',s._status==='pending_professional_translation'?s.translationPending:'');
  text('preview',connected?'':s.preview);
  el('brand').hidden=window.parent!==window;
- const state=busy?'checking':!checked?'notStarted':data?.ipv6Status??'unknown';
+ const state=busy||loading?'checking':clientStatus;
  el('status').dataset.state=state;
- text('status',busy?s.checking:!checked?s.notStarted:state==='supported'?s.supported:state==='unsupported'?s.unsupported:s.unverified);
- text('check',busy?s.checking:s.check);(el('check') as HTMLButtonElement).disabled=busy;
+ text('status',busy||loading?s.checking:state==='supported'?s.supported:state==='unsupported'?s.unsupported:s.unverified);
+ text('check',s.recheck);(el('check') as HTMLButtonElement).disabled=busy||loading;
  text('loading',loading?s.loading:'');
  text('checkHelp',!checked?s.checkHelp:state==='supported'?s.supportedHelp:s.unverifiedHelp);
- if(busy)text('checkHelp',s.checking);
+ if(busy||loading)text('checkHelp',s.checking);
  const region=countryName(data?.region??'XX',locale);
- text('rank',data?.myRank!=null?format('queryRank',{rank:number(data.myRank,locale),region}):s.queryPending);
+ text('rank',data?.myRank!=null?format('queryRank',{rank:number(data.myRank,locale),region}):checked&&!busy?s.queryUnavailable:s.queryPending);
  text('count',data?.todayQueries!=null?`${s.queriesToday}: ${number(data.todayQueries,locale)}${data.counted===false?` · ${s.queryRepeated}`:''}`:'');
  text('error',errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&data&&!data.statisticsAvailable?s.statsError:''));
  el('diagnostics').hidden=!el('error').textContent;
  text('country',`${s.region}: ${region}`);
+ text('regionalTitle',format('regionalTitle',{region}));
+ text('regionalContext',s.regionalContext);
  const regionalRate=data?.apnic.ipv6Rate;
  const hasOwnRate=data?.ipv6Rate!=null;
  el('sampleModule').hidden=!hasOwnRate;
@@ -79,7 +82,8 @@ async function api(path:string,method='GET'):Promise<Data&{probeUrl?:string|null
  return response.json();
 }
 function apply(value:Data) {
- data=value;
+ // Late host tool results must not overwrite browser detection or the country counter.
+ if(!checked)data=value;
  if(value.locale)locale=normalizeLocale(value.locale);
  // Only the trusted App origin (or the current standalone origin) can be contacted.
  if(value.apiOrigin==='https://app.17nas.com')origin=value.apiOrigin;
@@ -88,12 +92,17 @@ function apply(value:Data) {
 }
 async function refresh() {
  loading=true;render();
- try {const [result,config]=await Promise.all([api('/api/ipv6-rank'),api('/api/config')]);data=result;probeUrl=config.probeUrl??null;errorKey='';}
+ try {const [result,config]=await Promise.allSettled([api('/api/ipv6-rank'),api('/api/config')]);
+  if(result.status==='fulfilled')data=result.value;
+  if(config.status==='fulfilled')probeUrl=config.value.probeUrl??null;
+  errorKey=result.status==='rejected'?'statsError':'';
+ }
  catch(e){errorKey=e instanceof Error?e.message:'networkError';}
  finally{loading=false;render();}
 }
 async function check() {
- busy=true;checked=true;errorKey='';render();
+ if(busy||loading)return;
+ busy=true;checked=true;clientStatus='unknown';errorKey='';render();
  try {
   const probe=async()=>{
    if(!probeUrl)return 'unknown';
@@ -102,8 +111,17 @@ async function check() {
     if(!response.ok)return 'unknown';const result=await response.json();return result.ipv6Status==='supported'?'supported':'unknown';
    }catch{return 'unknown';}
   };
-  const [result,status]=await Promise.all([api('/api/ipv6-query','POST'),probe()]);
-  data={...result,ipv6Status:status};if(status==='unknown')errorKey=probeUrl?'probeUnknown':'probeMissing';
+  // Count failures must not discard a successful connectivity probe (or vice versa).
+  const [query,status]=await Promise.allSettled([api('/api/ipv6-query','POST'),probe()]);
+  clientStatus=status.status==='fulfilled'?status.value:'unknown';
+  if(query.status==='fulfilled')data={...query.value,ipv6Status:clientStatus};
+  else {if(data)data={...data,ipv6Status:clientStatus,myRank:null,todayQueries:null};errorKey=query.reason instanceof Error&&query.reason.message==='rateLimit'?'rateLimit':'queryUnavailable';}
+  if(!errorKey&&clientStatus==='unknown')errorKey=probeUrl?'probeUnknown':'probeMissing';
+  if(connected) {
+   // Whitelist model context: no addresses, identifiers or request headers.
+   const context={ipv6Status:clientStatus,region:data?.region??'XX',myRank:query.status==='fulfilled'?query.value.myRank:null,countryIpv6Rate:data?.apnic.ipv6Rate??null,source:'APNIC Labs',dataDate:data?.apnic.dataDate??null};
+   void app.updateModelContext({content:[{type:'text',text:JSON.stringify(context)}]}).catch(()=>{});
+  }
  }catch(e){errorKey=e instanceof Error?e.message:'networkError';}
  finally{busy=false;render();}
 }
@@ -121,3 +139,4 @@ if(window.parent!==window) {
  catch {errorKey='networkError';render();}
 }
 await refresh();
+await check();

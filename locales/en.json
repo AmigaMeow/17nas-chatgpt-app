@@ -4,12 +4,12 @@
   "check": "Check IPv6 support",
   "checking": "Checking your connection…",
   "loading": "Loading regional statistics…",
-  "supported": "IPv6 supported",
+  "supported": "Your connection supports IPv6",
   "unsupported": "IPv6 unavailable on this connection",
   "unknown": "Unknown",
   "region": "Your region",
   "queryRank": "Today's query #{rank} in {region}",
-  "queryPending": "Your query number appears after you check.",
+  "queryPending": "Getting your query number…",
   "queryRepeated": "Already counted within the past hour.",
   "queryUnavailable": "The query counter is unavailable. Please try again.",
   "queriesToday": "Queries today",
@@ -49,7 +49,7 @@
   "unverified": "IPv6 status not verified",
   "diagnosticsTitle": "Connection diagnostics",
   "footerSummary": "No IPs saved · HMAC expires within 1 hour · UTC counts",
-  "regionalTitle": "IPv6 in your region",
+  "regionalTitle": "{region} IPv6 adoption",
   "regionalRate": "IPv6 availability · APNIC Labs",
   "regionalMissing": "Regional statistics are not available yet.",
   "aboveGlobal": "{difference} percentage points above the global rate",
@@ -59,5 +59,7 @@
   "sampleContext": "These voluntary 17NAS samples describe participating connections, not every connection in the region.",
   "checkHelp": "Check whether this connection can reach an IPv6 service.",
   "supportedHelp": "This connection reached our IPv6 service. Remote access to your NAS needs a separate check.",
-  "unverifiedHelp": "This check could not confirm IPv6. Check your router and ISP settings, then try again."
+  "unverifiedHelp": "This check could not confirm IPv6. Check your router and ISP settings, then try again.",
+  "recheck": "Recheck IPv6",
+  "regionalContext": "Country-level statistics · background reference, separate from your connection test."
 }

@@ -4,12 +4,12 @@
   "check": "檢測 IPv6 支援",
   "checking": "正在檢測連線…",
   "loading": "正在載入地區統計…",
-  "supported": "已支援 IPv6",
+  "supported": "你的網路支援 IPv6",
   "unsupported": "目前連線無法使用 IPv6",
   "unknown": "未知",
   "region": "你的地區",
   "queryRank": "今天{region}第 {rank} 次查詢",
-  "queryPending": "檢測後顯示本次查詢序號。",
+  "queryPending": "正在取得本次查詢序號…",
   "queryRepeated": "過去一小時內已計數。",
   "queryUnavailable": "查詢計數暫時無法使用，請稍後再試。",
   "queriesToday": "今日查詢次數",
@@ -49,7 +49,7 @@
   "unverified": "IPv6 狀態：尚未確認",
   "diagnosticsTitle": "連線診斷",
   "footerSummary": "不儲存 IP · 防重複計數 HMAC 最長 1 小時失效 · UTC 計時",
-  "regionalTitle": "你所在地區的 IPv6",
+  "regionalTitle": "{region} IPv6 普及率",
   "regionalRate": "IPv6 可用比例 · APNIC Labs",
   "regionalMissing": "暫未提供本地區統計。",
   "aboveGlobal": "高於全球水準 {difference} 個百分點",
@@ -59,5 +59,7 @@
   "sampleContext": "這些是主動參與 17NAS 測試的連線樣本，不代表本地區所有連線。",
   "checkHelp": "檢測目前連線能否存取 IPv6 服務。",
   "supportedHelp": "目前連線已成功存取 IPv6 服務。NAS 能否從外網存取，還需要另外檢查。",
-  "unverifiedHelp": "本次未能確認 IPv6，可檢查路由器與電信業者設定後再試。"
+  "unverifiedHelp": "本次未能確認 IPv6，可檢查路由器與電信業者設定後再試。",
+  "recheck": "重新檢測",
+  "regionalContext": "國家級統計 · 背景參考，與上方個人網路檢測結果獨立。"
 }

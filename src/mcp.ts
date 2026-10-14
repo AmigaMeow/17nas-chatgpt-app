@@ -11,7 +11,7 @@ export async function handleMcp(request:Request,env:AppEnv) {
  const uri='ui://17nas/ipv6-card.html';
  registerAppTool(server,'check_network',{
   title:'IPv6 Checker & Stats',
-  description:'Open an inline IPv6 check and country statistics card. Shows APNIC Labs global rankings separately from 17NAS regional samples. The user clicks Check in the card to detect their connection and count one regional query; server tool calls cannot detect the user connection. Does not expose IP addresses, ASN, or NAT.',
+  description:'Open an inline IPv6 check and country statistics card. Shows APNIC Labs global rankings separately from 17NAS regional samples. The card automatically probes the browser connection and records a country-level query on load; a small Recheck button retries. Country adoption statistics are background context, not the personal probe result; server tool calls cannot detect the user connection. Does not expose IP addresses, ASN, or NAT.',
   inputSchema:z.object({country:z.string().refine(isCountry).optional(),locale:z.string().max(35).optional()}).strict(),
   annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false},
   _meta:{ui:{resourceUri:uri},'openai/outputTemplate':uri}

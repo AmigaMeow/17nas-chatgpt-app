@@ -76,3 +76,7 @@ Worker-runtime tests cover concurrency, midnight deduplication, request limiting
 See `docs/deployment.md`, `docs/launch-gates.md`, `docs/submission.md`, and `docs/data-audit.md`. No production deployment, npm publication, registry update, OpenAI submission, budget alert or professional translation has been completed by preparing this checkout.
 
 Ranking flags use the SVG assets from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT). Assets and their license are bundled and served by the App origin; no flag CDN is contacted. Missing flag assets fall back to the country name.
+
+### Automatic connection check
+
+The inline card shows a checking state on mount and automatically probes the dedicated IPv6-only endpoint while recording a country query (hourly deduplication applies). Recheck is an optional retry. Server tool calls originate from the AI host and cannot measure the user connection. Country APNIC adoption is labeled as separate background context. Probe failures remain unknown, including sandbox/CORS/network failures. After detection, the card sends an address-free result summary through `updateModelContext`; this does not rewrite an already delivered assistant message. Real ChatGPT sandbox connectivity still requires deployment validation.
