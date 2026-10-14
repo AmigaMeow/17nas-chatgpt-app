@@ -16,7 +16,7 @@
   "ownTitle": "17NAS regional IPv6 samples",
   "apnicTitle": "Global IPv6 Top 5",
   "ownRate": "IPv6 reachability",
-  "insufficient": "Insufficient data (at least 300 samples required)",
+  "insufficient": "Not enough local observations to publish a reliable rate yet.",
   "samples": "{count} samples · last 30 days",
   "source": "Source",
   "updated": "Updated",
@@ -48,5 +48,16 @@
   "notStarted": "Ready to check IPv6",
   "unverified": "IPv6 status not verified",
   "diagnosticsTitle": "Connection diagnostics",
-  "footerSummary": "No IPs saved · HMAC expires within 1 hour · UTC counts"
+  "footerSummary": "No IPs saved · HMAC expires within 1 hour · UTC counts",
+  "regionalTitle": "IPv6 in your region",
+  "regionalRate": "IPv6 availability · APNIC Labs",
+  "regionalMissing": "Regional statistics are not available yet.",
+  "aboveGlobal": "{difference} percentage points above the global rate",
+  "belowGlobal": "{difference} percentage points below the global rate",
+  "equalGlobal": "Matches the global rate",
+  "sampleDetails": "17NAS observations & methodology",
+  "sampleContext": "These voluntary 17NAS samples describe participating connections, not every connection in the region.",
+  "checkHelp": "Check whether this connection can reach an IPv6 service.",
+  "supportedHelp": "This connection reached our IPv6 service. Remote access to your NAS needs a separate check.",
+  "unverifiedHelp": "This check could not confirm IPv6. Check your router and ISP settings, then try again."
 }

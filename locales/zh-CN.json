@@ -16,7 +16,7 @@
   "ownTitle": "17NAS 地区 IPv6 样本",
   "apnicTitle": "全球 IPv6 前五名",
   "ownRate": "IPv6 可达率",
-  "insufficient": "数据不足（至少需要 300 个样本）",
+  "insufficient": "本地区观测还在积累，暂不公布比例。",
   "samples": "{count} 个样本 · 近 30 天",
   "source": "数据来源",
   "updated": "更新时间",
@@ -48,5 +48,16 @@
   "notStarted": "检测状态：未开始",
   "unverified": "IPv6 状态：暂未确认",
   "diagnosticsTitle": "连接诊断",
-  "footerSummary": "不保存 IP · 防重复计数 HMAC 最长 1 小时失效 · UTC 计时"
+  "footerSummary": "不保存 IP · 防重复计数 HMAC 最长 1 小时失效 · UTC 计时",
+  "regionalTitle": "你所在地区的 IPv6",
+  "regionalRate": "IPv6 可用比例 · APNIC Labs",
+  "regionalMissing": "本地区统计暂未提供。",
+  "aboveGlobal": "高于全球水平 {difference} 个百分点",
+  "belowGlobal": "低于全球水平 {difference} 个百分点",
+  "equalGlobal": "与全球水平相同",
+  "sampleDetails": "17NAS 观测与统计说明",
+  "sampleContext": "这些是主动参与 17NAS 测试的连接样本，不代表本地区所有连接。",
+  "checkHelp": "检测当前连接能否访问 IPv6 服务。",
+  "supportedHelp": "当前连接已成功访问 IPv6 服务。NAS 能否从外网访问，还需要单独检查。",
+  "unverifiedHelp": "本次未能确认 IPv6，可检查路由器和运营商设置后再试。"
 }
