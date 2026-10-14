@@ -24,9 +24,9 @@ export async function handleMcp(request:Request,env:AppEnv) {
  const domains=[env.PUBLIC_ORIGIN,...(env.IPV6_PROBE_URL?[new URL(env.IPV6_PROBE_URL).origin]:[])];
  registerAppResource(server,'ipv6-card',uri,{},async()=>({contents:[{
   uri,mimeType:RESOURCE_MIME_TYPE,text:html,
-  _meta:{ui:{domain:env.PUBLIC_ORIGIN,csp:{connectDomains:domains,resourceDomains:[]}},
+  _meta:{ui:{domain:env.PUBLIC_ORIGIN,csp:{connectDomains:domains,resourceDomains:[env.PUBLIC_ORIGIN]}},
    'openai/widgetDomain':env.PUBLIC_ORIGIN,'openai/widgetDescription':'IPv6 detection, regional query counts, and separately sourced IPv6 statistics.',
-   'openai/widgetCSP':{connect_domains:domains,resource_domains:[]}}
+   'openai/widgetCSP':{connect_domains:domains,resource_domains:[env.PUBLIC_ORIGIN]}}
  }]}));
  const transport=new WebStandardStreamableHTTPServerTransport({enableJsonResponse:true});
  await server.connect(transport);

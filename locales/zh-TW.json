@@ -44,7 +44,7 @@
   "operator": "營運者：jiahui zhang",
   "contact": "聯絡信箱：hello@17nas.com",
   "_status": "draft_for_owner_review",
-  "rankingScope": "排名範圍：目前 APNIC 副本包含的國家與地區",
+  "rankingScope": "排名範圍：目前 APNIC 資料集包含的國家與地區",
   "notStarted": "檢測狀態：尚未開始",
   "unverified": "IPv6 狀態：尚未確認",
   "diagnosticsTitle": "連線診斷",

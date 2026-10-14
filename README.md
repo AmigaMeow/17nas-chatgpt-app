@@ -74,3 +74,5 @@ npm audit --omit=dev
 Worker-runtime tests cover concurrency, midnight deduplication, request limiting, rejected IP input, absent IP output, data isolation, stale-cache limits, locale mapping, MCP initialization/tool listing/tool calls/resource reading. Browser screenshots are local preview evidence; they are not ChatGPT-directory approval evidence.
 
 See `docs/deployment.md`, `docs/launch-gates.md`, `docs/submission.md`, and `docs/data-audit.md`. No production deployment, npm publication, registry update, OpenAI submission, budget alert or professional translation has been completed by preparing this checkout.
+
+Ranking flags use the SVG assets from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT). Assets and their license are bundled and served by the App origin; no flag CDN is contacted. Missing flag assets fall back to the country name.

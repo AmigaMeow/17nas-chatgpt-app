@@ -63,6 +63,9 @@ li:nth-child(2), li:nth-child(3) { --bar: #568a75; }
 li:nth-child(4), li:nth-child(5) { --bar: #9db9ab; }
 .position { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--badge); color: #666; font-size: 11px; font-weight: 650; font-variant-numeric: tabular-nums; }
 li:first-child .position { color: #fff; background: var(--brand); }
+.rank-country { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.rank-country span { overflow-wrap: anywhere; }
+.flag { width: 20px; height: 15px; object-fit: contain; border-radius: 3px; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
 .rate { text-align: right; font-variant-numeric: tabular-nums; color: var(--brand); font-size: 13px; }
 li progress { grid-column: 2/4; height: 5px; }
 .query-summary { display: flex; gap: var(--space); margin-top: var(--card-gap); align-items: center; }

@@ -41,7 +41,13 @@ function render() {
  el('top').replaceChildren(...(data?.apnic.top5??[]).map(row=>{
   const li=document.createElement('li'),position=document.createElement('span'),name=document.createElement('span'),rate=document.createElement('strong'),bar=document.createElement('progress');
   position.className='position';position.textContent=number(row.globalRank,locale);
-  name.textContent=countryName(row.region,locale);rate.className='rate';rate.textContent=`${number(row.ipv6Rate,locale)}%`;
+  name.className='rank-country';
+  const label=document.createElement('span');label.textContent=countryName(row.region,locale);
+  if(/^[A-Z]{2}$/.test(row.region)&&row.region!=='XX'){
+   const flag=document.createElement('img');flag.className='flag';flag.alt='';flag.setAttribute('aria-hidden','true');flag.width=20;flag.height=15;flag.decoding='async';flag.referrerPolicy='no-referrer';
+   flag.onerror=()=>flag.remove();flag.src=`${origin}/flags/${row.region.toLowerCase()}.svg`;name.append(flag);
+  }
+  name.append(label);rate.className='rate';rate.textContent=`${number(row.ipv6Rate,locale)}%`;
   bar.max=100;bar.value=row.ipv6Rate;bar.setAttribute('aria-label',`${name.textContent}: ${s.ownRate}`);li.append(position,name,rate,bar);return li;
  }));
  text('globalRank',data?.globalRank?format('globalRank',{rank:number(data.globalRank,locale)}):'');
