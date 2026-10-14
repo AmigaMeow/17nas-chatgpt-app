@@ -1,0 +1,11 @@
+{
+  "check": {
+    "text": "Vérifie ta connexion IPv6",
+    "confidence": "medium"
+  },
+  "queryRankWithoutRegion": {
+    "text": "C’est la {rank}e vérification aujourd’hui",
+    "confidence": "high"
+  },
+  "status": "AI draft requested by owner; not professional translation; region placeholder still required"
+}

@@ -1,0 +1,98 @@
+import { App } from '@modelcontextprotocol/ext-apps';
+import { countryName,dictionaries,normalizeLocale,number,strings,type Locale } from '../src/i18n';
+
+type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:number;status:string;updatedAt:string|null;stale:boolean;statisticsAvailable:boolean;globalRank:number|null;apnic:{ipv6Rate:number|null;globalRate:number|null;dataDate:string|null;rankingScope:string|null;top5:{region:string;ipv6Rate:number;globalRank:number}[]}}&{todayQueries?:number|null;myRank?:number|null;counted?:boolean;probeUrl?:string|null;apiOrigin?:string;locale?:string};
+declare global {interface Window {openai?:{locale?:string;toolOutput?:Data};}}
+let locale:Locale=normalizeLocale(window.openai?.locale);
+let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false;
+let origin=window.parent!==window?'https://app.17nas.com':location.origin,probeUrl:string|null=null;
+const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.1.0'});
+const el=(id:string)=>document.getElementById(id)!;
+const text=(id:string,value:string)=>{el(id).textContent=value;};
+const format=(key:keyof ReturnType<typeof strings>,args:Record<string,string>={})=>{
+ let value=strings(locale)[key];for(const [k,v]of Object.entries(args))value=value.replaceAll(`{${k}}`,v);return value;
+};
+function date(value:string|null|undefined) {
+ if(!value)return strings(locale).unknown;
+ return new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeStyle:'short',timeZone:'UTC'}).format(new Date(value));
+}
+function render() {
+ document.documentElement.lang=locale;
+ el('language').setAttribute('aria-label',strings(locale).language);
+ const s=strings(locale);
+ for(const id of ['title','subtitle','ownTitle','apnicTitle','privacyShort','dedupNotice','dateUtc','details','privacy','terms'])text(id,s[id as keyof typeof s]);
+ text('translation',s._status==='pending_professional_translation'?s.translationPending:'');
+ text('preview',connected?'':s.preview);
+ text('status',busy?s.checking:data?.ipv6Status==='supported'?s.supported:data?.ipv6Status==='unsupported'?s.unsupported:s.unknown);
+ text('check',busy?s.checking:s.check);(el('check') as HTMLButtonElement).disabled=busy;
+ text('loading',loading?s.loading:'');
+ const region=countryName(data?.region??'XX',locale);
+ text('rank',data?.myRank!=null?format('queryRank',{rank:number(data.myRank,locale),region}):s.queryPending);
+ text('count',data?.todayQueries!=null?`${s.queriesToday}: ${number(data.todayQueries,locale)}${data.counted===false?` · ${s.queryRepeated}`:''}`:'');
+ text('error',errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&data&&!data.statisticsAvailable?s.statsError:''));
+ text('country',`${s.region}: ${region}`);
+ text('ownRate',data?.ipv6Rate!=null?`${s.ownRate}: ${number(data.ipv6Rate,locale)}%`:s.insufficient);
+ const progress=el('progress') as HTMLProgressElement;progress.hidden=data?.ipv6Rate==null;if(data?.ipv6Rate!=null)progress.value=data.ipv6Rate;progress.setAttribute('aria-label',s.ownRate);
+ text('samples',format('samples',{count:number(data?.sampleCount??0,locale)}));
+ text('ownUpdated',`${s.source}: 17NAS · ${s.updated}: ${date(data?.updatedAt)}`);
+ el('top').replaceChildren(...(data?.apnic.top5??[]).map(row=>{
+  const li=document.createElement('li'),name=document.createElement('span'),rate=document.createElement('strong');
+  name.textContent=`${format('rankPosition',{rank:number(row.globalRank,locale)})} ${countryName(row.region,locale)}`;rate.textContent=`${number(row.ipv6Rate,locale)}%`;li.append(name,rate);return li;
+ }));
+ text('globalRank',data?.globalRank?format('globalRank',{rank:number(data.globalRank,locale)}):'');
+ text('apnicUpdated',`${s.source}: APNIC Labs · ${s.updated}: ${data?.apnic.dataDate?new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(data.apnic.dataDate)):s.unknown}`);
+ // The scope's text is translated locally; the API also reports the exact scope for consumers.
+ text('scope',s.rankingScope);
+ text('cached',data?.stale?s.cached:'');
+ (el('privacy') as HTMLAnchorElement).href=`${origin}/privacy.html`;
+ (el('terms') as HTMLAnchorElement).href=`${origin}/terms.html`;
+ (el('language') as HTMLSelectElement).value=locale;
+}
+async function api(path:string,method='GET'):Promise<Data&{probeUrl?:string|null}> {
+ const response=await fetch(`${origin}${path}?locale=${encodeURIComponent(locale)}`,{method,credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(1800),...(method==='POST'?{headers:{'Content-Type':'application/json'},body:'{}'}:{})});
+ if(!response.ok)throw new Error(response.status===429?'rateLimit':'networkError');
+ return response.json();
+}
+function apply(value:Data) {
+ data=value;
+ if(value.locale)locale=normalizeLocale(value.locale);
+ // Only the trusted App origin (or the current standalone origin) can be contacted.
+ if(value.apiOrigin==='https://app.17nas.com')origin=value.apiOrigin;
+ probeUrl=value.probeUrl??probeUrl;
+ render();
+}
+async function refresh() {
+ loading=true;render();
+ try {const [result,config]=await Promise.all([api('/api/ipv6-rank'),api('/api/config')]);data=result;probeUrl=config.probeUrl??null;errorKey='';}
+ catch(e){errorKey=e instanceof Error?e.message:'networkError';}
+ finally{loading=false;render();}
+}
+async function check() {
+ busy=true;errorKey='';render();
+ try {
+  const probe=async()=>{
+   if(!probeUrl)return 'unknown';
+   try {const url=new URL(probeUrl);if(url.protocol!=='https:'||!url.hostname.endsWith('.17nas.com'))return 'unknown';
+    const response=await fetch(url,{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(1800)});
+    if(!response.ok)return 'unknown';const result=await response.json();return result.ipv6Status==='supported'?'supported':'unknown';
+   }catch{return 'unknown';}
+  };
+  const [result,status]=await Promise.all([api('/api/ipv6-query','POST'),probe()]);
+  data={...result,ipv6Status:status};if(status==='unknown')errorKey=probeUrl?'probeUnknown':'probeMissing';
+ }catch(e){errorKey=e instanceof Error?e.message:'networkError';}
+ finally{busy=false;render();}
+}
+const selector=el('language') as HTMLSelectElement;
+for(const code of Object.keys(dictionaries) as Locale[]){const option=document.createElement('option');option.value=code;option.textContent=new Intl.DisplayNames([code],{type:'language'}).of(code)??code;selector.append(option);}
+selector.setAttribute('aria-label',strings(locale).language);
+selector.onchange=()=>{locale=normalizeLocale(selector.value);render();};
+el('check').onclick=check;
+app.ontoolresult=({structuredContent})=>{if(structuredContent)apply(structuredContent as Data);};
+app.onhostcontextchanged=context=>{if(context.locale)locale=normalizeLocale(context.locale);render();};
+render();
+if(window.openai?.toolOutput)apply(window.openai.toolOutput);
+if(window.parent!==window) {
+ try {await Promise.race([app.connect(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('HOST_TIMEOUT')),1800))]);connected=true;locale=normalizeLocale(app.getHostContext()?.locale??window.openai?.locale);render();}
+ catch {errorKey='networkError';render();}
+}
+await refresh();

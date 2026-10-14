@@ -1,0 +1,11 @@
+{
+  "check": {
+    "text": "IPv6 지원 확인",
+    "confidence": "high"
+  },
+  "queryRankWithoutRegion": {
+    "text": "오늘 {rank}번째 조회예요",
+    "confidence": "high"
+  },
+  "status": "AI draft requested by owner; not professional translation; region placeholder still required"
+}

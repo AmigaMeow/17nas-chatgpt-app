@@ -1,0 +1,13 @@
+# Privacy Policy — IPv6 Checker & Stats
+
+Draft for operator review. Effective on production launch. Operator: jiahui zhang. Contact: hello@17nas.com.
+
+The App displays IPv6 connectivity results, country-level query totals, 17NAS aggregate samples and APNIC Labs rankings. It does not ask you to provide an IP address. Cloudflare transiently processes the source address of a direct browser request to determine its country and protect the service. Our API does not return or write plain IP addresses to databases or application logs. An AI-hosted tool request does not reveal your connection and does not increment your country counter.
+
+We retain country/day totals for 30 UTC calendar days. We use short-lived, purpose-specific IP HMACs only to limit abuse and repeated counting. These expire within one hour, use rotating daily keys and are not logged or used for profiling. Active statistics are cached for one hour; a last-good copy may be used for up to 24 hours. No cookies, LocalStorage, advertising identifiers or accounts are used. IPv6 probe results are displayed in the card and are not retained as individual records.
+
+The App uses a separately deployed Cloudflare service and aggregate data exported into its own storage. It never calls the website's internal APIs. The website and the separately installed Claude MCP tools have their own data processing; their behavior is described in the MCP README. OpenAI and Cloudflare process information under their respective policies. We do not sell personal information or use it for advertising.
+
+Where applicable under GDPR and CCPA/CPRA, you can request access, correction, deletion, restriction or an explanation of processing, and exercise applicable objection and complaint rights, by contacting hello@17nas.com. Country aggregates cannot be attributed to an individual, and short-lived abuse records have no persistent account identifier. We will explain what can be located without asking you to supply more information than necessary. Security and service operation are the purposes of this limited processing; applicable legal bases and processor arrangements must be finalized by the operator before launch.
+
+Application observability is disabled. Before launch, the operator must verify provider security/access-log settings and backup retention so that deployment matches these retention limits. This draft is not a representation that production has already passed that verification.

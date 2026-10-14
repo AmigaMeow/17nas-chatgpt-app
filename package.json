@@ -1,0 +1,30 @@
+{
+  "name": "17nas-chatgpt-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && wrangler dev",
+    "types": "wrangler types",
+    "check": "npm run types && tsc --noEmit && tsc --noEmit -p tsconfig.widget.json",
+    "test": "vitest run",
+    "deploy": "npm run build && wrangler deploy",
+    "dry-run": "npm run build && wrangler deploy --dry-run",
+    "export:validate": "node scripts/validate-export.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "1.7.5",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.2",
+    "@types/node": "latest",
+    "esbuild": "latest",
+    "playwright": "latest",
+    "typescript": "latest",
+    "vitest": "4.1.11",
+    "wrangler": "latest"
+  }
+}

@@ -1,0 +1,11 @@
+node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+dist/
+artifacts/
+*.tgz
+.env*
+src/widget-html.ts
+
+!.dev.vars.example

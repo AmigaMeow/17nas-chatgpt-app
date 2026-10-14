@@ -1,0 +1,771 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-14T13:25:01Z",
+  "own": {
+    "source": "17NAS",
+    "updatedAt": "2026-10-14T13:25:01Z",
+    "windowDays": 30,
+    "minimumSamples": 300,
+    "countries": {
+      "CN": {
+        "sampleCount": 16543,
+        "successes": 11457,
+        "ipv6Rate": 69.3,
+        "status": "available"
+      },
+      "TW": {
+        "sampleCount": 207,
+        "successes": 115,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "HK": {
+        "sampleCount": 204,
+        "successes": 94,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "US": {
+        "sampleCount": 118,
+        "successes": 53,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "JP": {
+        "sampleCount": 66,
+        "successes": 37,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "SG": {
+        "sampleCount": 32,
+        "successes": 18,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "DE": {
+        "sampleCount": 19,
+        "successes": 13,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "BR": {
+        "sampleCount": 15,
+        "successes": 4,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "MO": {
+        "sampleCount": 14,
+        "successes": 13,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "GB": {
+        "sampleCount": 9,
+        "successes": 6,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "CA": {
+        "sampleCount": 8,
+        "successes": 4,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "KR": {
+        "sampleCount": 6,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "MY": {
+        "sampleCount": 6,
+        "successes": 3,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "LV": {
+        "sampleCount": 5,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "NL": {
+        "sampleCount": 5,
+        "successes": 4,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "SE": {
+        "sampleCount": 5,
+        "successes": 4,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "VN": {
+        "sampleCount": 5,
+        "successes": 3,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "AU": {
+        "sampleCount": 4,
+        "successes": 4,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "FR": {
+        "sampleCount": 4,
+        "successes": 3,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "ID": {
+        "sampleCount": 3,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "IN": {
+        "sampleCount": 3,
+        "successes": 3,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "IT": {
+        "sampleCount": 3,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "LT": {
+        "sampleCount": 3,
+        "successes": 3,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "TH": {
+        "sampleCount": 3,
+        "successes": 2,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "AE": {
+        "sampleCount": 2,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "CZ": {
+        "sampleCount": 2,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "PH": {
+        "sampleCount": 2,
+        "successes": 2,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "BA": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "EE": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "ES": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "HU": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "IE": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "IL": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "KE": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "KH": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "KZ": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "PL": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "PT": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "RU": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "SA": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "SC": {
+        "sampleCount": 1,
+        "successes": 1,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      },
+      "ZA": {
+        "sampleCount": 1,
+        "successes": 0,
+        "ipv6Rate": null,
+        "status": "insufficient_data"
+      }
+    }
+  },
+  "apnic": {
+    "source": "APNIC Labs",
+    "updatedAt": "2026-10-13T03:50:01Z",
+    "dataDate": "2026-10-11",
+    "rankingScope": "countries_and_territories_in_snapshot",
+    "globalRate": 43.67,
+    "countries": [
+      {
+        "region": "FR",
+        "ipv6Rate": 85.65,
+        "sampleCount": 22477918,
+        "globalRank": 1
+      },
+      {
+        "region": "IN",
+        "ipv6Rate": 76.76,
+        "sampleCount": 126478012,
+        "globalRank": 2
+      },
+      {
+        "region": "FK",
+        "ipv6Rate": 75.16,
+        "sampleCount": 2295,
+        "globalRank": 3
+      },
+      {
+        "region": "MY",
+        "ipv6Rate": 73.4,
+        "sampleCount": 8288179,
+        "globalRank": 4
+      },
+      {
+        "region": "DE",
+        "ipv6Rate": 73.04,
+        "sampleCount": 17106003,
+        "globalRank": 5
+      },
+      {
+        "region": "AX",
+        "ipv6Rate": 72.4,
+        "sampleCount": 15408,
+        "globalRank": 6
+      },
+      {
+        "region": "BE",
+        "ipv6Rate": 71.32,
+        "sampleCount": 3595081,
+        "globalRank": 7
+      },
+      {
+        "region": "VN",
+        "ipv6Rate": 64.42,
+        "sampleCount": 26839260,
+        "globalRank": 8
+      },
+      {
+        "region": "LK",
+        "ipv6Rate": 62.23,
+        "sampleCount": 1484522,
+        "globalRank": 9
+      },
+      {
+        "region": "JP",
+        "ipv6Rate": 61.88,
+        "sampleCount": 74705630,
+        "globalRank": 10
+      },
+      {
+        "region": "US",
+        "ipv6Rate": 61.84,
+        "sampleCount": 97772309,
+        "globalRank": 11
+      },
+      {
+        "region": "UY",
+        "ipv6Rate": 61.78,
+        "sampleCount": 1365508,
+        "globalRank": 12
+      },
+      {
+        "region": "NP",
+        "ipv6Rate": 61.72,
+        "sampleCount": 2347855,
+        "globalRank": 13
+      },
+      {
+        "region": "BR",
+        "ipv6Rate": 59.42,
+        "sampleCount": 37869804,
+        "globalRank": 14
+      },
+      {
+        "region": "TW",
+        "ipv6Rate": 58.86,
+        "sampleCount": 10031140,
+        "globalRank": 15
+      },
+      {
+        "region": "SR",
+        "ipv6Rate": 56.52,
+        "sampleCount": 228077,
+        "globalRank": 16
+      },
+      {
+        "region": "HU",
+        "ipv6Rate": 56.07,
+        "sampleCount": 3083434,
+        "globalRank": 17
+      },
+      {
+        "region": "LU",
+        "ipv6Rate": 55.79,
+        "sampleCount": 234549,
+        "globalRank": 18
+      },
+      {
+        "region": "GB",
+        "ipv6Rate": 54.34,
+        "sampleCount": 15635169,
+        "globalRank": 19
+      },
+      {
+        "region": "NO",
+        "ipv6Rate": 53.5,
+        "sampleCount": 2115986,
+        "globalRank": 20
+      },
+      {
+        "region": "NL",
+        "ipv6Rate": 52.5,
+        "sampleCount": 5898496,
+        "globalRank": 21
+      },
+      {
+        "region": "TH",
+        "ipv6Rate": 52.41,
+        "sampleCount": 12893904,
+        "globalRank": 22
+      },
+      {
+        "region": "FI",
+        "ipv6Rate": 51.09,
+        "sampleCount": 1843694,
+        "globalRank": 23
+      },
+      {
+        "region": "CN",
+        "ipv6Rate": 49.85,
+        "sampleCount": 42772343,
+        "globalRank": 24
+      },
+      {
+        "region": "MO",
+        "ipv6Rate": 49.64,
+        "sampleCount": 509601,
+        "globalRank": 25
+      },
+      {
+        "region": "CH",
+        "ipv6Rate": 48.17,
+        "sampleCount": 2287066,
+        "globalRank": 26
+      },
+      {
+        "region": "LI",
+        "ipv6Rate": 48.0,
+        "sampleCount": 13552,
+        "globalRank": 27
+      },
+      {
+        "region": "AU",
+        "ipv6Rate": 47.43,
+        "sampleCount": 6640546,
+        "globalRank": 28
+      },
+      {
+        "region": "EE",
+        "ipv6Rate": 47.1,
+        "sampleCount": 391777,
+        "globalRank": 29
+      },
+      {
+        "region": "MN",
+        "ipv6Rate": 46.87,
+        "sampleCount": 944144,
+        "globalRank": 30
+      },
+      {
+        "region": "GF",
+        "ipv6Rate": 46.22,
+        "sampleCount": 71258,
+        "globalRank": 31
+      },
+      {
+        "region": "PY",
+        "ipv6Rate": 45.22,
+        "sampleCount": 1252326,
+        "globalRank": 32
+      },
+      {
+        "region": "CA",
+        "ipv6Rate": 45.04,
+        "sampleCount": 15350588,
+        "globalRank": 33
+      },
+      {
+        "region": "BO",
+        "ipv6Rate": 44.0,
+        "sampleCount": 2467624,
+        "globalRank": 34
+      },
+      {
+        "region": "IE",
+        "ipv6Rate": 43.75,
+        "sampleCount": 1533427,
+        "globalRank": 35
+      },
+      {
+        "region": "AT",
+        "ipv6Rate": 43.58,
+        "sampleCount": 2230773,
+        "globalRank": 36
+      },
+      {
+        "region": "BT",
+        "ipv6Rate": 39.61,
+        "sampleCount": 117471,
+        "globalRank": 37
+      },
+      {
+        "region": "CZ",
+        "ipv6Rate": 39.11,
+        "sampleCount": 3444192,
+        "globalRank": 38
+      },
+      {
+        "region": "EC",
+        "ipv6Rate": 38.19,
+        "sampleCount": 3309572,
+        "globalRank": 39
+      },
+      {
+        "region": "LV",
+        "ipv6Rate": 34.99,
+        "sampleCount": 725201,
+        "globalRank": 40
+      },
+      {
+        "region": "PE",
+        "ipv6Rate": 34.83,
+        "sampleCount": 6190188,
+        "globalRank": 41
+      },
+      {
+        "region": "AR",
+        "ipv6Rate": 34.42,
+        "sampleCount": 13414664,
+        "globalRank": 42
+      },
+      {
+        "region": "SE",
+        "ipv6Rate": 34.02,
+        "sampleCount": 4693896,
+        "globalRank": 43
+      },
+      {
+        "region": "NZ",
+        "ipv6Rate": 33.13,
+        "sampleCount": 1944947,
+        "globalRank": 44
+      },
+      {
+        "region": "RO",
+        "ipv6Rate": 32.46,
+        "sampleCount": 4211723,
+        "globalRank": 45
+      },
+      {
+        "region": "ID",
+        "ipv6Rate": 29.29,
+        "sampleCount": 41747473,
+        "globalRank": 46
+      },
+      {
+        "region": "KR",
+        "ipv6Rate": 28.96,
+        "sampleCount": 16547187,
+        "globalRank": 47
+      },
+      {
+        "region": "GY",
+        "ipv6Rate": 28.43,
+        "sampleCount": 371788,
+        "globalRank": 48
+      },
+      {
+        "region": "IM",
+        "ipv6Rate": 26.48,
+        "sampleCount": 56277,
+        "globalRank": 49
+      },
+      {
+        "region": "LT",
+        "ipv6Rate": 25.0,
+        "sampleCount": 841611,
+        "globalRank": 50
+      },
+      {
+        "region": "DK",
+        "ipv6Rate": 24.63,
+        "sampleCount": 2671332,
+        "globalRank": 51
+      },
+      {
+        "region": "BG",
+        "ipv6Rate": 23.56,
+        "sampleCount": 2377065,
+        "globalRank": 52
+      },
+      {
+        "region": "PK",
+        "ipv6Rate": 23.03,
+        "sampleCount": 12392852,
+        "globalRank": 53
+      },
+      {
+        "region": "CL",
+        "ipv6Rate": 22.99,
+        "sampleCount": 6060157,
+        "globalRank": 54
+      },
+      {
+        "region": "SG",
+        "ipv6Rate": 21.8,
+        "sampleCount": 2430946,
+        "globalRank": 55
+      },
+      {
+        "region": "CO",
+        "ipv6Rate": 21.34,
+        "sampleCount": 9791122,
+        "globalRank": 56
+      },
+      {
+        "region": "PH",
+        "ipv6Rate": 20.86,
+        "sampleCount": 14940268,
+        "globalRank": 57
+      },
+      {
+        "region": "IR",
+        "ipv6Rate": 20.41,
+        "sampleCount": 89404,
+        "globalRank": 58
+      },
+      {
+        "region": "PL",
+        "ipv6Rate": 19.61,
+        "sampleCount": 8019306,
+        "globalRank": 59
+      },
+      {
+        "region": "MD",
+        "ipv6Rate": 19.28,
+        "sampleCount": 845156,
+        "globalRank": 60
+      },
+      {
+        "region": "BM",
+        "ipv6Rate": 18.61,
+        "sampleCount": 46965,
+        "globalRank": 61
+      },
+      {
+        "region": "BD",
+        "ipv6Rate": 18.02,
+        "sampleCount": 10998444,
+        "globalRank": 62
+      },
+      {
+        "region": "MV",
+        "ipv6Rate": 16.41,
+        "sampleCount": 239522,
+        "globalRank": 63
+      },
+      {
+        "region": "BY",
+        "ipv6Rate": 15.22,
+        "sampleCount": 3101562,
+        "globalRank": 64
+      },
+      {
+        "region": "UA",
+        "ipv6Rate": 14.29,
+        "sampleCount": 10002996,
+        "globalRank": 65
+      },
+      {
+        "region": "SK",
+        "ipv6Rate": 13.12,
+        "sampleCount": 1557737,
+        "globalRank": 66
+      },
+      {
+        "region": "IS",
+        "ipv6Rate": 13.06,
+        "sampleCount": 184221,
+        "globalRank": 67
+      },
+      {
+        "region": "AF",
+        "ipv6Rate": 10.96,
+        "sampleCount": 582132,
+        "globalRank": 68
+      },
+      {
+        "region": "VE",
+        "ipv6Rate": 10.45,
+        "sampleCount": 7771230,
+        "globalRank": 69
+      },
+      {
+        "region": "HK",
+        "ipv6Rate": 9.71,
+        "sampleCount": 4842495,
+        "globalRank": 70
+      },
+      {
+        "region": "TL",
+        "ipv6Rate": 9.59,
+        "sampleCount": 87830,
+        "globalRank": 71
+      },
+      {
+        "region": "MM",
+        "ipv6Rate": 8.83,
+        "sampleCount": 748478,
+        "globalRank": 72
+      },
+      {
+        "region": "SJ",
+        "ipv6Rate": 8.62,
+        "sampleCount": 174,
+        "globalRank": 73
+      },
+      {
+        "region": "RU",
+        "ipv6Rate": 5.2,
+        "sampleCount": 76870,
+        "globalRank": 74
+      },
+      {
+        "region": "LA",
+        "ipv6Rate": 3.21,
+        "sampleCount": 718456,
+        "globalRank": 75
+      },
+      {
+        "region": "FO",
+        "ipv6Rate": 1.99,
+        "sampleCount": 30676,
+        "globalRank": 76
+      },
+      {
+        "region": "MC",
+        "ipv6Rate": 1.24,
+        "sampleCount": 17152,
+        "globalRank": 77
+      },
+      {
+        "region": "GG",
+        "ipv6Rate": 0.59,
+        "sampleCount": 34010,
+        "globalRank": 78
+      },
+      {
+        "region": "KH",
+        "ipv6Rate": 0.47,
+        "sampleCount": 1483113,
+        "globalRank": 79
+      },
+      {
+        "region": "GL",
+        "ipv6Rate": 0.29,
+        "sampleCount": 45567,
+        "globalRank": 80
+      },
+      {
+        "region": "JE",
+        "ipv6Rate": 0.25,
+        "sampleCount": 57121,
+        "globalRank": 81
+      },
+      {
+        "region": "BN",
+        "ipv6Rate": 0.16,
+        "sampleCount": 204941,
+        "globalRank": 82
+      },
+      {
+        "region": "PM",
+        "ipv6Rate": 0.08,
+        "sampleCount": 6560,
+        "globalRank": 83
+      }
+    ]
+  }
+}

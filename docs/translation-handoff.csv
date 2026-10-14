@@ -1,0 +1,46 @@
+key,English source,ja,ko,es,de,fr,status
+title,IPv6 Checker & Stats,,,,,,pending_professional_translation
+subtitle,Check your connection. Explore your region.,,,,,,pending_professional_translation
+check,Check IPv6 support,,,,,,pending_professional_translation
+checking,Checking your connection…,,,,,,pending_professional_translation
+loading,Loading regional statistics…,,,,,,pending_professional_translation
+supported,IPv6 supported,,,,,,pending_professional_translation
+unsupported,IPv6 unavailable on this connection,,,,,,pending_professional_translation
+unknown,Unknown,,,,,,pending_professional_translation
+region,Your region,,,,,,pending_professional_translation
+queryRank,Today's query #{rank} in {region},,,,,,pending_professional_translation
+queryPending,Your query number appears after you check.,,,,,,pending_professional_translation
+queryRepeated,Already counted within the past hour.,,,,,,pending_professional_translation
+queryUnavailable,The query counter is unavailable. Please try again.,,,,,,pending_professional_translation
+queriesToday,Queries today,,,,,,pending_professional_translation
+ownTitle,17NAS regional IPv6 samples,,,,,,pending_professional_translation
+apnicTitle,Global IPv6 Top 5,,,,,,pending_professional_translation
+ownRate,IPv6 reachability,,,,,,pending_professional_translation
+insufficient,Insufficient data (at least 300 samples required),,,,,,pending_professional_translation
+samples,{count} samples · last 30 days,,,,,,pending_professional_translation
+source,Source,,,,,,pending_professional_translation
+updated,Updated,,,,,,pending_professional_translation
+scope,Ranking scope,,,,,,pending_professional_translation
+globalRank,APNIC global rank: {rank},,,,,,pending_professional_translation
+details,View details,,,,,,pending_professional_translation
+privacy,Privacy policy,,,,,,pending_professional_translation
+terms,Terms of service,,,,,,pending_professional_translation
+privacyShort,No IP addresses saved. Country totals only.,,,,,,pending_professional_translation
+dedupNotice,Short-lived HMACs prevent repeated counting; they expire within one hour.,,,,,,pending_professional_translation
+cached,Showing cached statistics (less than 24 hours old).,,,,,,pending_professional_translation
+statsError,Statistics are temporarily unavailable. Please try again later.,,,,,,pending_professional_translation
+networkError,Couldn't complete the check. Try again in a moment.,,,,,,pending_professional_translation
+rateLimit,Too many requests. Please wait a minute and try again.,,,,,,pending_professional_translation
+invalidRequest,Please check your request and try again.,,,,,,pending_professional_translation
+probeMissing,IPv6 detection isn't configured yet.,,,,,,pending_professional_translation
+probeUnknown,IPv6 status couldn't be verified.,,,,,,pending_professional_translation
+translationNotice,Translation may be inaccurate. Feedback is welcome.,,,,,,pending_professional_translation
+translationPending,This language is awaiting professional translation. English is shown for now.,,,,,,pending_professional_translation
+refresh,Refresh,,,,,,pending_professional_translation
+language,Language,,,,,,pending_professional_translation
+rankPosition,#{rank},,,,,,pending_professional_translation
+dateUtc,Dates and daily counts use UTC.,,,,,,pending_professional_translation
+preview,Standalone preview · not running inside ChatGPT,,,,,,pending_professional_translation
+operator,Operated by jiahui zhang,,,,,,pending_professional_translation
+contact,Contact: hello@17nas.com,,,,,,pending_professional_translation
+rankingScope,Ranking scope: countries and territories in this APNIC snapshot,,,,,,pending_professional_translation

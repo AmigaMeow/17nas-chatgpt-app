@@ -1,0 +1,11 @@
+{
+  "check": {
+    "text": "IPv6 対応をチェック",
+    "confidence": "high"
+  },
+  "queryRankWithoutRegion": {
+    "text": "今日の{rank}回目のチェックです",
+    "confidence": "medium"
+  },
+  "status": "AI draft requested by owner; not professional translation; region placeholder still required"
+}
