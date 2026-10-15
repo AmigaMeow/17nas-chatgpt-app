@@ -12,6 +12,7 @@ Saved conversation: https://chatgpt.com/c/6ad0d045-8da4-83ec-beb3-c139d54fca10 (
 
 - Publish an allowlisted completed browser measurement after the host handshake, including measured country, observed transports and HTTP duration. No IP, ASN, ISP, city or raw error is forwarded.
 - Add a user-triggered “Explain results in chat” action to send the measurement into the conversation. A context update alone does not trigger a model reply.
+- Route combined IPv4/IPv6/country requests to one combined tool rather than three overlapping cards.
 - Mark the initial server tool result as pending and prohibit filling it with host location or memory. Clear stale country/protocol observations on recheck.
 - Keep timeout, fetch, policy and HTTP failures unverified. Fetch TypeError does not identify an IPv6 routing failure conclusively.
 - Remove raw diagnostics and request/tool parameter logging; retain localized friendly errors.
