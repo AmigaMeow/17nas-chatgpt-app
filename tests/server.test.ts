@@ -26,6 +26,24 @@ describe('Isolated server API',()=>{
    log.mockRestore();if(oldPort===undefined)delete process.env.APP_PORT;else process.env.APP_PORT=oldPort;
   }
  });
+ it('serves the app overview and support pages without allowing arbitrary files',async()=>{
+  const oldPort=process.env.APP_PORT,oldRoot=process.env.APP_ASSETS_DIR;
+  process.env.APP_PORT='0';process.env.APP_ASSETS_DIR=join(process.cwd(),'public');
+  const server=await startServer();
+  try{
+   await once(server,'listening');const address=server.address();
+   if(!address||typeof address==='string')throw new Error('Missing test listener');
+   const origin='http://127.0.0.1:'+address.port;
+   for(const path of ['/','/index.html','/support.html']){
+    const response=await fetch(origin+path);expect(response.status).toBe(200);
+    expect(await response.text()).toContain('IPv6 Checker &amp; Stats');
+   }
+   expect((await fetch(origin+'/package.json')).status).toBe(404);
+  }finally{
+   await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
+   for(const [key,value] of [['APP_PORT',oldPort],['APP_ASSETS_DIR',oldRoot]]){if(value===undefined)delete process.env[key!];else process.env[key!]=value;}
+  }
+ });
  it('has no count endpoint, ordinal or plaintext address output',async()=>{
   expect((await request('/api/ipv6-query',undefined,'POST')).status).toBe(404);
   const body=await(await request('/api/network')).json();

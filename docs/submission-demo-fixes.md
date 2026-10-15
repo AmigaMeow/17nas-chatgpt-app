@@ -17,6 +17,7 @@ Saved conversation: https://chatgpt.com/c/6ad0d045-8da4-83ec-beb3-c139d54fca10 (
 - Remove raw diagnostics and request/tool parameter logging; retain localized friendly errors.
 - Display APNIC global rate, progress bar, source and date in the statistics card.
 - Describe NAT as an external test guide, with NAT/CGNAT/packet loss and root cause unmeasured.
+- Add English app overview and support pages; the old app-domain root returned 404.
 - Use resource `ui://17nas/ipv6-card-v3.html`; retain v2 and legacy URI compatibility.
 - Correct privacy wording about transient source-address processing and remove the false claim that five pending languages have professional translations.
 
@@ -25,7 +26,7 @@ Saved conversation: https://chatgpt.com/c/6ad0d045-8da4-83ec-beb3-c139d54fca10 (
 All results below use local or simulated data, not the production ChatGPT iframe.
 
 - TypeScript and production-origin build passed.
-- Vitest: 22 tests passed, including sanitized result projection, pending/NAT metadata, resource version and request-log privacy checks.
+- Vitest: 23 tests passed, including sanitized result projection, pending/NAT metadata, resource version and request-log privacy checks.
 - Chrome browser harness: all five intents, country flags, sample threshold, HTTP failures, locale precedence, 320px layout and repeated expand/collapse passed.
 - Probe harness: fetch failure, 5-second timeout, base outage, late host handshake, conversation send and stale-country clearing passed.
 - `git diff --check` passed.
