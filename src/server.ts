@@ -62,6 +62,15 @@ export async function startServer() {
   try{
    let source=sourceAddress(req,trustNginx);
    const route=new URL(req.url??'/',env.PUBLIC_ORIGIN).pathname;
+   if(route==='/.well-known/openai-apps-challenge'){
+    res.writeHead(200,{
+     'Content-Type':'text/plain; charset=utf-8',
+     'Cache-Control':'no-cache, no-store, must-revalidate',
+     'Access-Control-Allow-Origin':'*'
+    });
+    res.end('mU1t8DneY9m-bDWgAt2RgxRD20lqQKvBgMmF2NLeqkk');
+    return;
+   }
    const limited=(route.startsWith('/api/')||route==='/mcp')&&req.method!=='OPTIONS'&&(!source||limiter.limited(source));
    console.log(`[17NAS Server] ${new Date().toISOString()} ${req.method} ${route} limited=${limited} isIP=${isIP(source)}`);
    let region='XX';try{const place=geo?.get(source);region=place?.country?.iso_code??'XX';}catch{}

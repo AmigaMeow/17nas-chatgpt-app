@@ -25,5 +25,9 @@ server {
     error_log /dev/null;
     client_max_body_size 16k;
     if ($host != mcp.17nas.com) { return 404; }
+    location = /.well-known/openai-apps-challenge {
+        default_type text/plain;
+        return 200 'mU1t8DneY9m-bDWgAt2RgxRD20lqQKvBgMmF2NLeqkk';
+    }
     location / { include /etc/nginx/snippets/17nas-app-proxy.inc; }
 }
