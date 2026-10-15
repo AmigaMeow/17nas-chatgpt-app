@@ -10,7 +10,7 @@ Keywords (关键词): IPv6, IPv6 test, IPv6 checker, network connectivity, netwo
 
 Desired category: Developer Tools, or Productivity if Developer Tools is not an available option. Verify the categories in the live form.
 
-Icon: public/icon.svg (prepare required raster sizes after checking the actual submission form). Privacy and terms drafts: /privacy.html and /terms.html. Contact: hello@17nas.com; operator: jiahui zhang. These are draft public pages, not deployed links.
+Icon: public/icon.svg (prepare required raster sizes after checking the actual submission form). Privacy and terms drafts: /privacy.html and /terms.html. Contact: hello@17nas.com; operator: jiahui zhang. The policy pages are served publicly; their draft operator-review status is visible. Confirm final policy content and provider logging before submission.
 
 ## Conversation Starters (开场白预设提示词)
 
@@ -18,7 +18,7 @@ Icon: public/icon.svg (prepare required raster sizes after checking the actual s
 
 ### 简体中文 (Chinese)
 1. **🎮 排查游戏联机与 NAT 类型**
-   - 触发提示词: 帮我排查游戏联机掉线问题，并测试我的 NAT 类型。
+   - 触发提示词: 帮我排查游戏联机掉线问题，并说明如何测试 NAT 限制。
    - 命中工具: `check_nat`
 2. **🌐 检测网络与 IPv6 连接**
    - 触发提示词: 测一下我的网络连接和 IPv6 支持情况。
@@ -32,7 +32,7 @@ Icon: public/icon.svg (prepare required raster sizes after checking the actual s
 
 ### 英文 (English)
 1. **🎮 Troubleshoot game matchmaking & NAT type**
-   - Prompt: Troubleshoot multiplayer game connection drops and test my NAT type.
+   - Prompt: Show me how to check whether NAT restrictions could be involved in multiplayer game disconnections.
    - Tool target: `check_nat`
 2. **🌐 Check network & IPv6 support**
    - Prompt: Check my current network connection and IPv6 reachability.

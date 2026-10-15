@@ -1,6 +1,6 @@
 # 17NAS IPv6 Checker & Stats
 
-An independent ChatGPT inline card and MCP-over-HTTP service for IPv6 connection checks, anonymous country query counts, and separate 17NAS/APNIC statistics. It does not expose IP addresses, ASN, or NAT. Version 0.1.0 is a local release candidate, not a submitted or approved directory App.
+An independent ChatGPT inline card and MCP-over-HTTP service for IPv6 connection checks, country attribution, and separate 17NAS/APNIC statistics. It does not expose IP addresses, ASN, or NAT. Version 0.2.1 contains submission preparation fixes; publication and review approval remain separate steps.
 
 ## Local run
 

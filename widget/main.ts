@@ -2,23 +2,44 @@ import type { BrowserConnection } from '../src/index';
 import flagCodes from './flag-codes.json';
 import { App } from '@modelcontextprotocol/ext-apps';
 import { countryName,normalizeLocale,number,strings,type Locale } from '../src/i18n';
+import { connectionResult } from './connection-result';
 
 type CardKind='connection'|'network'|'nat'|'statistics'|'combined';
 type Data={region:string;ipv6Status:string;ipv6Rate:number|null;sampleCount:number;status:string;updatedAt:string|null;stale:boolean;statisticsAvailable:boolean;globalRank:number|null;apnic:{ipv6Rate:number|null;globalRate:number|null;dataDate:string|null;rankingScope:string|null;top5:{region:string;ipv6Rate:number;globalRank:number}[]}}&{cardKind?:CardKind;requestedCountry?:string|null;probeUrl?:string|null;apiOrigin?:string;locale?:string;localeSource?:'conversation'|'host';connection?:BrowserConnection};
-declare global {interface Window {openai?:{locale?:string;toolOutput?:Data;notifyIntrinsicHeight?:(height:number)=>void};}}
+declare global {interface Window {openai?:{locale?:string;toolOutput?:Data;notifyIntrinsicHeight?:(height:number)=>void;sendFollowUpMessage?:(message:{prompt:string})=>Promise<void>};}}
 let locale:Locale=normalizeLocale(window.openai?.locale);
 let data:Data|undefined, busy=false, loading=true, errorKey='', connected=false, checked=false;
 let clientStatus='unknown',conversationLocale=false;
 const observations=new Map<string,{protocol:'IPv4'|'IPv6';requestMs:number}>();
 function observe(value:{connection?:BrowserConnection},requestMs:number){if(value.connection&&['IPv4','IPv6'].includes(value.connection.protocol))observations.set(value.connection.protocol,{protocol:value.connection.protocol,requestMs});}
-function publishContext(){if(connected)void app.updateModelContext({content:[{type:'text',text:JSON.stringify({status:'completed',ipv6Status:clientStatus,region:data?.region??'XX',protocols:[...observations.values()].map(o=>({protocol:o.protocol,requestMs:o.requestMs})),note:'Browser protocol reachability and HTTP duration. Client IP addresses and ASNs are never collected, returned, or displayed. Failed probes remain unverified.'})}]}).catch(()=>{});}
-
-let diagnosticDetail='';
+let measurement:ReturnType<typeof connectionResult>|undefined,sharing=false,shareFeedback='';
+function canShare(){return !!((connected&&app.getHostCapabilities()?.message)||window.openai?.sendFollowUpMessage);}
+async function publishContext(){
+ if(!connected||!started||(!hasProbe()&&cardKind!=='network')||!app.getHostCapabilities()?.updateModelContext)return;
+ const value=measurement??{kind:'browser_network_measurement',status:'pending',note:'The browser check is running. Do not use any earlier measurement or infer country, city, IP, ASN or protocol status.'};
+ try{await app.updateModelContext({structuredContent:value,content:[{type:'text',text:JSON.stringify(value)}]});}catch{/* The card remains usable if the host does not accept context updates. */}
+}
+async function shareResults(){
+ if(!measurement||busy||loading||sharing)return;
+ const result=measurement;
+ sharing=true;shareFeedback='';render();
+ const prompt=strings(locale).sharePrompt+'\n'+JSON.stringify(result);
+ try{
+  if(connected&&app.getHostCapabilities()?.message){
+   await publishContext();
+   const response=await app.sendMessage({role:'user',content:[{type:'text',text:prompt}]});
+   if(response.isError)throw new Error('messageRejected');
+  }else if(window.openai?.sendFollowUpMessage){await window.openai.sendFollowUpMessage({prompt});}
+  else{throw new Error('messageUnavailable');}
+  shareFeedback='shareSent';
+ }catch{shareFeedback='shareFailed';}
+ finally{sharing=false;render();}
+}
 let cardKind:CardKind='combined',requestedCountry:string|null=null,started=false;
 const hasProbe=()=>cardKind==='connection'||cardKind==='combined';
 declare const APP_PUBLIC_ORIGIN:string;
 let origin=window.parent!==window?APP_PUBLIC_ORIGIN:location.origin,probeUrl:string|null=null;
-const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.1.0'},{},{autoResize:false});
+const app=new App({name:'17NAS IPv6 Checker & Stats',version:'0.2.1'},{},{autoResize:false});
 const supportedFlags=new Set(flagCodes);
 // Measure content, never the host viewport: a tall iframe must also shrink on collapse.
 let resizePending=false,lastSize='';
@@ -73,12 +94,17 @@ function render() {
  el('status').dataset.state=state;
  text('status',busy||loading?s.checking:state==='supported'?s.supported:state==='unsupported'?s.unsupported:s.unverified);
  text('check',s.recheck);(el('check') as HTMLButtonElement).disabled=busy||loading;
+ el('share').hidden=(!hasProbe()&&cardKind!=='network')||!canShare();
+ text('share',sharing?s.sharingResults:s.shareResults);
+ (el('share') as HTMLButtonElement).disabled=busy||loading||sharing||!measurement;
+ text('shareFeedback',shareFeedback?s[shareFeedback as 'shareSent'|'shareFailed']:'');
+ el('shareHelp').hidden=el('share').hidden; text('shareHelp',s.shareHelp);
  text('loading',loading?(cardKind==='network'?s.networkPending:hasProbe()?s.checking:s.loading):'');
  text('checkHelp',!checked?s.checkHelp:state==='supported'?s.supportedHelp:state==='unsupported'?s.unsupportedHelp:s.unverifiedHelp);
  if(busy||loading)text('checkHelp',s.checking);
  const region=countryName(data?.region??'XX',locale);
  const baseError=errorKey?s[errorKey as keyof typeof s]??s.networkError:(!loading&&cardKind==='statistics'&&data&&!data.statisticsAvailable?s.statsError:'');
- text('error',baseError&&diagnosticDetail?`${baseError}\n（诊断: ${diagnosticDetail}）`:baseError);
+ text('error',baseError);
  el('diagnostics').hidden=!el('error').textContent;
  text('country',`${s.region}: ${region}`);
  text('networkRegion',loading?s.networkPending:region);
@@ -95,6 +121,13 @@ function render() {
  const regionalProgress=el('regionalProgress') as HTMLProgressElement;
  regionalProgress.hidden=regionalRate==null;if(regionalRate!=null)regionalProgress.value=regionalRate;regionalProgress.setAttribute('aria-label',s.regionalRate);
  const globalRate=data?.apnic?.globalRate;
+ el('globalPanel').hidden=cardKind!=='statistics';
+ text('globalTitle',s.globalTitle);
+ text('globalRate',globalRate!=null?`${number(globalRate,locale)}%`:s.globalUnavailable);
+ const globalProgress=el('globalProgress') as HTMLProgressElement;
+ globalProgress.hidden=globalRate==null;if(globalRate!=null)globalProgress.value=globalRate;
+ globalProgress.setAttribute('aria-label',s.globalTitle);
+ text('globalUpdated',`${s.source}: APNIC Labs · ${s.updated}: ${data?.apnic?.dataDate?new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(data.apnic.dataDate)):s.unknown}`);
  const difference=regionalRate!=null&&globalRate!=null?Math.round((regionalRate-globalRate)*100)/100:null;
  text('comparison',difference==null?'':difference===0?s.equalGlobal:format(difference>0?'aboveGlobal':'belowGlobal',{difference:number(Math.abs(difference),locale)}));
  text('countryRank',data?.globalRank?format('globalRank',{rank:number(data.globalRank,locale)}):'');
@@ -148,18 +181,9 @@ async function refresh() {
 }
 async function readConnection(){
  const began=performance.now();
- console.log('[17NAS] -> GET /api/network starting...');
- try {
-  const result=await api('/api/network');
-  const ms=Math.round(performance.now()-began);
-  console.log(`[17NAS] <- /api/network OK (${ms}ms): protocol=${result.connection?.protocol??'none'}, region=${result.region}`);
-  observe(result,ms);
-  return result;
- } catch(e) {
-  const ms=Math.round(performance.now()-began);
-  console.warn(`[17NAS] <- /api/network failed (${ms}ms):`, e instanceof Error ? `${e.name}: ${e.message}` : e);
-  throw e;
- }
+ const result=await api('/api/network');
+ observe(result,Math.round(performance.now()-began));
+ return result;
 }
 function renderConnections(){
  const visible=hasProbe()||cardKind==='network',s=strings(locale);
@@ -206,78 +230,66 @@ ${s.protocolNote}`:s.protocolNote);
 }
 async function check() {
  if(busy||loading)return;
- busy=true;checked=true;clientStatus='unknown';errorKey='';diagnosticDetail='';observations.clear();render();
+ busy=true;checked=true;clientStatus='unknown';errorKey='';measurement=undefined;shareFeedback='';observations.clear();render();void publishContext();
  let probeError='';
  try {
   const probe=async()=>{
    if(!probeUrl){
-    console.warn('[17NAS] probeUrl not configured');
     probeError='probeMissing';return 'unknown';
    }
-   console.log(`[17NAS] -> GET ${probeUrl} starting...`);
    const began=performance.now();
    try {
     const url=new URL(probeUrl);
     if(url.protocol!=='https:'||!url.hostname.endsWith('.17nas.com')){
-     console.warn('[17NAS] Invalid probeUrl hostname:', probeUrl);
      probeError='probeUnknown';return 'unknown';
     }
     const response=await fetch(url,{credentials:'omit',cache:'no-store',signal:AbortSignal.timeout(5000)});
     const ms=Math.round(performance.now()-began);
     if(!response.ok){
-     console.warn(`[17NAS] <- probe HTTP error ${response.status} (${ms}ms)`);
      probeError='probeHttp';return 'unknown';
     }
     const result=await response.json();
-    console.log(`[17NAS] <- probe success (${ms}ms):`, result);
     if(result.ipv6Status==='supported'&&result.connection?.protocol==='IPv6'){
      observe(result,ms);return 'supported';
     }
     probeError='probeUnknown';return 'unknown';
    }catch(e){
-    const ms=Math.round(performance.now()-began);
-    console.warn(`[17NAS] <- probe failed (${ms}ms):`, e instanceof Error ? `${e.name}: ${e.message}` : e);
     if(e instanceof DOMException&&e.name==='TimeoutError'){probeError='probeTimeout';return 'unknown';}
-    probeError='probeNetwork';return 'unsupported';
+    // Fetch TypeError also covers CORS, TLS and sandbox policy failures, not just routing.
+    probeError='probeNetwork';return 'unknown';
    }
   };
   const [query,status]=await Promise.allSettled([readConnection(),probe()]);
   const queryOk=query.status==='fulfilled';
   const probeVal=status.status==='fulfilled'?status.value:'unknown';
 
-  if(!queryOk&&probeVal==='unsupported'){
-   clientStatus='unknown';
-  } else {
-   clientStatus=probeVal;
-  }
+  clientStatus=probeVal;
 
   if(queryOk){
    data={...query.value,ipv6Status:clientStatus};
   } else {
-   if(data)data={...data,ipv6Status:clientStatus};
+   if(data)data={...data,region:'XX',ipv6Status:clientStatus};
    const err=query.reason;
    if(err instanceof DOMException&&err.name==='TimeoutError'){
     errorKey='networkError';
-    diagnosticDetail='基础端点请求超时(>5s)';
    } else if(err instanceof Error&&err.message==='rateLimit'){
     errorKey='rateLimit';
-    diagnosticDetail='请求过于频繁，请稍候重试';
    } else {
     errorKey='networkError';
-    diagnosticDetail=err instanceof Error?`${err.name}: ${err.message}`:'基础网络连接失败';
    }
   }
   if(!errorKey&&clientStatus==='unknown'){
    errorKey=probeError||'probeUnknown';
-   if(probeError==='probeTimeout')diagnosticDetail='IPv6探针超时(>5s)';
-   else if(probeError==='probeNetwork')diagnosticDetail='IPv6探针无法连通';
   }
-  console.log(`[17NAS] Determination: queryOk=${queryOk}, clientStatus=${clientStatus}, errorKey=${errorKey}, detail=${diagnosticDetail}`);
-  publishContext();
- }catch(e){errorKey=e instanceof Error?e.message:'networkError';}
- finally{busy=false;render();}
+ }catch{errorKey='networkError';}
+ finally{
+  busy=false;
+  measurement=connectionResult({region:data?.region,observations:observations.values(),probePerformed:true,probeStatus:clientStatus,errorCode:errorKey});
+  render();void publishContext();
+ }
 }
 el('check').onclick=check;
+el('share').onclick=shareResults;
 app.ontoolresult=({structuredContent})=>{if(structuredContent)apply(structuredContent as Data);};
 app.onhostcontextchanged=context=>{if(context.locale&&!conversationLocale)locale=normalizeLocale(context.locale);render();};
 render();
@@ -287,9 +299,8 @@ if(window.parent!==window) {
   await Promise.race([app.connect(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('HOST_TIMEOUT')),8000))]);
   connected=true;
   if(!conversationLocale)locale=normalizeLocale(app.getHostContext()?.locale??window.openai?.locale);
-  render();
+  render();void publishContext();
  } catch(e) {
-  console.warn('[17NAS] Host connect handshake warning:', e);
   render();
  }
 }
@@ -298,13 +309,13 @@ async function start() {
  if(cardKind==='nat'){loading=false;render();return;}
  if(cardKind==='statistics'){await refresh();return;}
  if(cardKind==='network') {
-  try{data=await readConnection();checked=true;publishContext();
+  try{data=await readConnection();checked=true;
   }
-  catch(e){errorKey=e instanceof Error?e.message:'networkError';}
-  finally{loading=false;render();}
+  catch(e){errorKey=e instanceof Error&&e.message==='rateLimit'?'rateLimit':'networkError';if(data)data={...data,region:'XX'};}
+  finally{loading=false;measurement=connectionResult({region:data?.region,observations:observations.values(),probePerformed:false,probeStatus:clientStatus,errorCode:errorKey});render();void publishContext();}
   return;
  }
- try{const config=await api('/api/config');probeUrl=config.probeUrl??probeUrl;}catch(e){console.warn('[17NAS] /api/config warning:', e);}
+ try{const config=await api('/api/config');probeUrl=config.probeUrl??probeUrl;}catch{/* A missing configuration leaves the probe unverified. */}
  loading=false;await check();
 }
 // Embedded cards wait for their tool payload, so NAT/statistics never accidentally probe.

@@ -1,6 +1,6 @@
 import {chromium} from 'playwright';
 // Simulated responses validate card routing, not production statistics or IPv6 reachability.
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(process.env.PLAYWRIGHT_CHANNEL?{channel:process.env.PLAYWRIGHT_CHANNEL}:{})});
 const fixture={connection:{protocol:'IPv4'},region:'US',ipv6Status:'unknown',ipv6Rate:null,sampleCount:118,status:'insufficient_data',updatedAt:'2026-10-14T12:00:00Z',stale:false,statisticsAvailable:true,globalRank:11,apnic:{ipv6Rate:61.84,globalRate:43.67,dataDate:'2026-10-11',rankingScope:'countries_and_territories',top5:[['FR',85.65],['IN',76.76],['FK',75.16],['MY',73.4],['DE',73.04]].map(([region,ipv6Rate],i)=>({region,ipv6Rate,globalRank:i+1}))}};
 for(const kind of ['connection','network','nat','statistics','combined']){
  const page=await browser.newPage({viewport:{width:520,height:850}});const requests=[],errors=[];
@@ -41,6 +41,8 @@ for(const kind of ['connection','network','nat','statistics','combined']){
   if(await page.evaluate(()=>window.heights.at(-1))!==baseline)throw Error('Collapsed height drift');
  }
  if(kind==='statistics'){
+  if(!(await page.locator('#globalRate').textContent()).includes('43.67'))throw Error('Global rate missing from the visible card');
+  if(!(await page.locator('#globalUpdated').isVisible()))throw Error('APNIC date is hidden from the main card');
   await page.locator('#top img').evaluateAll(imgs=>Promise.all(imgs.map(img=>img.decode())));
   const flags=await page.locator('#top li').evaluateAll(rows=>rows.map(row=>({country:row.querySelector('.rank-country').textContent,region:row.querySelector('img')?.src.split('/').at(-1).slice(0,-4).toUpperCase(),asset:row.querySelector('img')?.src.split('/').at(-1),loaded:!!row.querySelector('img')?.naturalWidth})));
   console.table(flags);
@@ -117,13 +119,16 @@ await host.evaluate(value=>{
  });
  iframe.src='/widget.html';document.body.replaceChildren(iframe);
 },{...fixture,cardKind:'statistics'});
-const embedded=host.frameLocator('iframe');await embedded.locator('#top li').first().waitFor();await host.waitForTimeout(200);
+const embedded=host.frameLocator('iframe');await embedded.locator('#top li').first().waitFor();
+await embedded.locator('#loading').waitFor({state:'hidden'});
+const measuredHeight=await embedded.locator('.card').evaluate(card=>Math.ceil(card.getBoundingClientRect().bottom+parseFloat(getComputedStyle(document.body).paddingBottom)));
+await host.waitForFunction(height=>window.sizes.at(-1)===height,measuredHeight,{timeout:5000});
 const embeddedHeight=await host.evaluate(()=>window.sizes.at(-1));
 if(!embeddedHeight||embeddedHeight>=850)throw Error('Host did not shrink initial frame');
 for(let n=0;n<8;n++){
- await embedded.locator('#about > summary').click();await host.waitForTimeout(100);
+ await embedded.locator('#about > summary').click();await host.waitForFunction(height=>window.sizes.at(-1)>height,embeddedHeight,{timeout:5000});
  if(await host.evaluate(()=>window.sizes.at(-1))<=embeddedHeight)throw Error('Standard bridge did not grow');
- await embedded.locator('#about > summary').click();await host.waitForTimeout(100);
+ await embedded.locator('#about > summary').click();await host.waitForFunction(height=>window.sizes.at(-1)===height,embeddedHeight,{timeout:5000});
  if(await host.evaluate(()=>window.sizes.at(-1))!==embeddedHeight)throw Error('Standard bridge height drift');
 }
 await host.locator('iframe').evaluate(frame=>frame.style.width='300px');await host.waitForTimeout(100);

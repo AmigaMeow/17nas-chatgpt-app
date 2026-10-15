@@ -1,4 +1,4 @@
-import { describe,it,expect } from 'vitest';
+import { describe,it,expect,vi } from 'vitest';
 import {handleRequest,type AppEnv} from '../src/index';
 import {validateSnapshot,statsFor,loadStats} from '../src/stats';
 import {normalizeLocale} from '../src/i18n';
@@ -56,5 +56,30 @@ describe('App MCP protocol',()=>{
   const meta=resource.result.contents[0]._meta;
   expect(meta.ui.csp.resourceDomains).toEqual([bindings.PUBLIC_ORIGIN]);
   expect(meta['openai/widgetCSP'].resource_domains).toEqual([bindings.PUBLIC_ORIGIN]);
+ });
+ it('returns explicit pending/untested boundaries and uses a fresh cached-resource identity',async()=>{
+  const list=await rpc('tools/list');
+  for(const tool of list.result.tools){
+   expect(tool._meta.ui.resourceUri).toBe('ui://17nas/ipv6-card-v3.html');
+   expect(tool.annotations).toMatchObject({readOnlyHint:true,destructiveHint:false,openWorldHint:true});
+  }
+  const check=await rpc('tools/call',{name:'check_network',arguments:{locale:'en'}});
+  expect(check.result.structuredContent.measurementStatus).toBe('pending');
+  expect(check.result.content[0].text).toContain('host location, memory');
+  const nat=await rpc('tools/call',{name:'check_nat',arguments:{locale:'en'}});
+  expect(nat.result.structuredContent.natStatus).toBe('not_tested');
+  expect(nat.result.content[0].text).toContain('does not determine NAT type');
+  const prompts=await rpc('prompts/get',{name:'check_network_ipv6'});
+  expect(prompts.result.messages[0].content.text).toBe('Check my browser connection and IPv6 reachability.');
+ });
+ it('does not write arbitrary MCP parameters or tool arguments to logs',async()=>{
+  const log=vi.spyOn(console,'log').mockImplementation(()=>{});
+  try{
+   await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'192.0.2.7 AS64500 Ipswich',version:'1'}});
+   const result=await rpc('tools/call',{name:'check_network',arguments:{locale:'192.0.2.7'}});
+   expect(JSON.stringify(result)).not.toContain('192.0.2.7');
+   const output=JSON.stringify(log.mock.calls);
+   for(const sensitive of ['192.0.2.7','AS64500','Ipswich'])expect(output).not.toContain(sensitive);
+  }finally{log.mockRestore();}
  });
 });
