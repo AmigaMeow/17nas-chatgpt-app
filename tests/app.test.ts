@@ -1,50 +1,36 @@
 import { describe,it,expect } from 'vitest';
-import { env } from 'cloudflare:workers';
-import { runInDurableObject } from 'cloudflare:test';
-import worker from '../src/index';
-import type { AppEnv } from '../src/index';
-import { fingerprints } from '../src/privacy';
-import { validateSnapshot,statsFor,loadStats } from '../src/stats';
-import { normalizeLocale } from '../src/i18n';
+import {handleRequest,type AppEnv} from '../src/index';
+import {validateSnapshot,statsFor,loadStats} from '../src/stats';
+import {normalizeLocale} from '../src/i18n';
 import snapshot from './fixtures/snapshot.json';
-const bindings=env as unknown as AppEnv;
-const secret='test-only-secret-with-more-than-32-characters';
-const time=Date.parse('2026-10-14T12:00:00Z');
-describe('Country aggregation and privacy',()=>{
- it('assigns consecutive ordinals to concurrent queries and deduplicates repeats',async()=>{
-  const stub=bindings.COUNTERS.get(bindings.COUNTERS.idFromName('counter-concurrency'));
-  const fps=await Promise.all(Array.from({length:15},(_,i)=>fingerprints(`198.51.100.${i}`,secret,time)));
-  const results=await Promise.all(fps.map(fp=>stub.visit(fp,true,time)));
-  expect(results.map(r=>r.myRank).sort((a,b)=>a!-b!)).toEqual(Array.from({length:15},(_,i)=>i+1));
-  const repeat=await stub.visit(fps[0],true,time+1000);expect(repeat.counted).toBe(false);expect(repeat.todayQueries).toBe(15);
-  await runInDurableObject(stub,async(instance,state)=>{const rows=state.storage.sql.exec('SELECT * FROM totals').toArray();expect(rows).toEqual([{day:'2026-10-14',total:15}]);});
- });
- it('deduplicates across UTC midnight without attributing yesterday rank to today',async()=>{
-  const stub=bindings.COUNTERS.get(bindings.COUNTERS.idFromName('counter-midnight'));
-  const before=Date.parse('2026-10-14T23:59:00Z');await stub.visit(await fingerprints('198.51.100.100',secret,before),true,before);
-  const after=before+120000;const repeat=await stub.visit(await fingerprints('198.51.100.100',secret,after),true,after);
-  expect(repeat.counted).toBe(false);expect(repeat.myRank).toBeNull();expect(repeat.todayQueries).toBe(0);
- });
- it('limits the eleventh request in one minute',async()=>{
-  const stub=bindings.COUNTERS.get(bindings.COUNTERS.idFromName('counter-limit'));const fp=await fingerprints('198.51.100.101',secret,time);
-  for(let i=0;i<10;i++)expect((await stub.visit(fp,false,time)).limited).toBe(false);
-  expect((await stub.visit(fp,false,time)).limited).toBe(true);
- });
- it('rejects IP parameters, invalid JSON, and never echoes source addresses',async()=>{
-  const req=(path:string,init:RequestInit={})=>new Request('https://app.17nas.com'+path,{...init,headers:{'CF-Connecting-IP':'198.51.100.222',...init.headers}});
-  expect((await worker.fetch(req('/api/ipv6-rank?ip=1.2.3.4'),bindings)).status).toBe(400);
-  expect((await worker.fetch(req('/api/ipv6-query',{method:'POST',body:'{broken'}),bindings)).status).toBe(400);
-  const result=await worker.fetch(req('/api/ipv6-rank'),bindings);expect(result.status).toBe(200);expect(await result.text()).not.toContain('198.51.100.222');
- });
-});
+const bindings:AppEnv={STATS:{get:async()=>snapshot},ASSETS:{fetch:async()=>new Response(null,{status:404})},PUBLIC_ORIGIN:'https://app.17nas.com',IPV6_PROBE_URL:'',RELEASE:'0.1.0'};
 describe('Separated statistical sources',()=>{
  it('does not substitute APNIC rates for insufficient own samples',()=>{
   const data=validateSnapshot(snapshot);const us=statsFor(data,'US');expect(us.ipv6Rate).toBeNull();expect(us.status).toBe('insufficient_data');expect(us.apnic.ipv6Rate).not.toBeNull();
   expect(statsFor(data,'CN').ipv6Rate).toBeGreaterThan(0);
  });
+ it('publishes own rates starting at exactly 300 samples',()=>{
+  for(const count of [299,300,301]){
+   const value=structuredClone(snapshot);const successes=Math.floor(count/2);
+   value.own.countries.US={sampleCount:count,successes,ipv6Rate:count>=300?Math.round(successes/count*1000)/10:null,status:count>=300?'available':'insufficient_data'};
+   const stats=statsFor(validateSnapshot(value),'US');expect(stats.ipv6Rate!==null).toBe(count>=300);
+   const invalid=structuredClone(value);invalid.own.countries.US.status=count>=300?'insufficient_data':'available';expect(()=>validateSnapshot(invalid)).toThrow();
+  }
+ });
+ it('returns explicit missing values for an empty country dataset',()=>{
+  const value=structuredClone(snapshot);value.own.countries={};value.apnic.countries=[];value.apnic.globalRate=null;
+  const stats=statsFor(validateSnapshot(value),'US');expect(stats.ipv6Rate).toBeNull();expect(stats.apnic.ipv6Rate).toBeNull();expect(stats.globalRank).toBeNull();expect(stats.apnic.top5).toEqual([]);
+ });
+ it('rejects negative, non-integer or dirty sample counts in exported snapshots',()=>{
+  for(const bad of [-1, 299.5, 'dirty', null, NaN, Infinity]){
+   const value=structuredClone(snapshot);
+   value.own.countries.US={sampleCount:bad as any,successes:0,ipv6Rate:null,status:'insufficient_data'};
+   expect(()=>validateSnapshot(value)).toThrow();
+  }
+ });
  it('rejects unexpected fields in exported snapshots',()=>{expect(()=>validateSnapshot({...snapshot,ip:'1.2.3.4'})).toThrow();});
  it('uses last-good data within 24 hours, rejects expired source data',async()=>{
-  await bindings.STATS.put('stats:last-good',JSON.stringify(snapshot));const generated=Date.parse(snapshot.generatedAt);
+  bindings.STATS={get:async()=>snapshot};const generated=Date.parse(snapshot.generatedAt);
   expect((await loadStats(bindings.STATS,generated+7200000))?.stale).toBe(true);
   expect(await loadStats(bindings.STATS,generated+86400001)).toBeNull();
  });
@@ -53,15 +39,16 @@ describe('Separated statistical sources',()=>{
 
 describe('App MCP protocol',()=>{
  const rpc=async(method:string,params:unknown={})=>{
-  const response=await worker.fetch(new Request('https://app.17nas.com/mcp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})}),bindings);
+  const response=await handleRequest(new Request('https://app.17nas.com/mcp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:1,method,params})}),bindings,{region:'US',ipv6:false,limited:false});
   expect(response.status).toBe(200);return response.json() as Promise<any>;
  };
  it('initializes and exposes the card without using host IP or counting',async()=>{
   const init=await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'test',version:'1'}});expect(init.result.serverInfo.name).toContain('17NAS');
   const list=await rpc('tools/list');expect(list.result.tools.map((t:any)=>t.name)).toEqual(['check_ipv6_connection','get_network_region','check_nat','get_ipv6_statistics','check_network']);
-  const call=await rpc('tools/call',{name:'check_network',arguments:{locale:'zh-HK'}});expect(call.error).toBeUndefined();expect(call.result.structuredContent.locale).toBe('zh-TW');expect(call.result.structuredContent.region).toBe('XX');expect(call.result.structuredContent.myRank).toBeNull();expect(call.result.structuredContent.cardKind).toBe('combined');
+  const prompts=await rpc('prompts/list');expect(prompts.result.prompts.map((p:any)=>p.name)).toEqual(['troubleshoot_game_nat','check_network_ipv6','view_ipv6_rankings','check_network_region']);
+  const call=await rpc('tools/call',{name:'check_network',arguments:{locale:'zh-HK'}});expect(call.error).toBeUndefined();expect(call.result.structuredContent.locale).toBe('zh-TW');expect(call.result.structuredContent.localeSource).toBe('conversation');expect(call.result.content[0].text).toContain('佔位');expect(list.result.tools.find((t:any)=>t.name==='check_network').description).toContain('IPv4');expect(call.result.structuredContent.region).toBe('XX');expect(call.result.structuredContent.myRank).toBeUndefined();expect(call.result.structuredContent.cardKind).toBe('combined');
   for(const [name,kind] of [['check_nat','nat'],['get_network_region','network'],['check_ipv6_connection','connection'],['get_ipv6_statistics','statistics']]){
-   const result=await rpc('tools/call',{name,arguments:name==='get_ipv6_statistics'?{country:'DE'}:{}});expect(result.result.structuredContent.cardKind).toBe(kind);expect(result.result.structuredContent.myRank).toBeNull();
+   const result=await rpc('tools/call',{name,arguments:name==='get_ipv6_statistics'?{country:'DE'}:{}});expect(result.result.structuredContent.cardKind).toBe(kind);expect(result.result.structuredContent.myRank).toBeUndefined();
    expect(result.result.structuredContent.requestedCountry).toBe(name==='get_ipv6_statistics'?'DE':null);
   }
   const invalid=await rpc('tools/call',{name:'get_network_region',arguments:{ip:'1.2.3.4'}});expect(invalid.result.isError).toBe(true);

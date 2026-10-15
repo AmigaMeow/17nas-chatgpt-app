@@ -1,0 +1,10 @@
+    proxy_pass http://127.0.0.1:8790;
+    proxy_pass_request_headers off;
+    proxy_set_header Host $host;
+    proxy_set_header X-17nas-source-ip $app_source_ip;
+    proxy_set_header X-17nas-direct-ipv6 $app_direct_ipv6;
+    proxy_set_header Content-Type $http_content_type;
+    proxy_set_header Accept $http_accept;
+    proxy_set_header MCP-Protocol-Version $http_mcp_protocol_version;
+    proxy_connect_timeout 2s;
+    proxy_read_timeout 10s;

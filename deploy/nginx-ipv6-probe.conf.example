@@ -1,0 +1,28 @@
+# IPv6 destination isolation is enforced by the stream map, regardless of SNI.
+server {
+    listen 127.0.0.1:4447 ssl proxy_protocol;
+    server_name ipv6only.17nas.com;
+    ssl_certificate /var/lib/17nas-probe-acme/certificates/ipv6only.17nas.com.crt;
+    ssl_certificate_key /var/lib/17nas-probe-acme/certificates/ipv6only.17nas.com.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    set_real_ip_from 127.0.0.1;
+    real_ip_header proxy_protocol;
+    access_log off;
+    error_log /dev/null crit;
+    client_max_body_size 1k;
+    client_body_timeout 5s;
+    keepalive_timeout 5s;
+    if ($host != ipv6only.17nas.com) { return 404; }
+    location = /api/probe {
+        proxy_pass http://127.0.0.1:8790;
+        proxy_pass_request_headers off;
+        proxy_set_header Host ipv6only.17nas.com;
+        proxy_set_header X-17nas-source-ip $remote_addr;
+        proxy_set_header X-17nas-direct-ipv6 1;
+        proxy_set_header Accept $http_accept;
+        proxy_set_header Content-Type $http_content_type;
+        proxy_connect_timeout 2s;
+        proxy_read_timeout 5s;
+    }
+    location / { return 404; }
+}

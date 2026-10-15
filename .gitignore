@@ -9,3 +9,5 @@ artifacts/
 src/widget-html.ts
 
 !.dev.vars.example
+
+!.env.example

@@ -1,3 +1,4 @@
+export interface StatsStore { get(key:string,format:'json'):Promise<unknown>; }
 export interface CountryStats {sampleCount:number; successes:number; ipv6Rate:number|null; status:'available'|'insufficient_data';}
 export interface APNICCountry {region:string; ipv6Rate:number; sampleCount:number; globalRank:number;}
 export interface Snapshot {schemaVersion:1; generatedAt:string; own:{source:'17NAS';updatedAt:string;windowDays:30;minimumSamples:300;countries:Record<string,CountryStats>};apnic:{source:'APNIC Labs';updatedAt:string;dataDate:string;rankingScope:string;globalRate:number|null;countries:APNICCountry[]};}
@@ -21,7 +22,7 @@ export function validateSnapshot(data:unknown): Snapshot {
  if(d.apnic.globalRate!==null&&(!finite(d.apnic.globalRate)||d.apnic.globalRate<0||d.apnic.globalRate>100))throw new Error('INVALID_SNAPSHOT');
  return d;
 }
-export async function loadStats(kv:KVNamespace,now=Date.now()) {
+export async function loadStats(kv:StatsStore,now=Date.now()) {
  for(const key of ['stats:fresh','stats:last-good']){
   try {const raw=await kv.get(key,'json'); if(!raw)continue; const data=validateSnapshot(raw);const age=Math.max(now-Date.parse(data.generatedAt),now-Date.parse(data.own.updatedAt));if(Date.parse(data.generatedAt)>now+300000||Date.parse(data.own.updatedAt)>now+300000||age>86400000)continue;return {data,stale:age>3600000};}catch{/* Never log exception payloads. */}
  }

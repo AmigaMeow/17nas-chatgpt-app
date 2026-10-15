@@ -1,0 +1,22 @@
+[Unit]
+Description=17NAS isolated ChatGPT App
+After=network.target
+[Service]
+User=17nas-app
+Group=17nas-app
+WorkingDirectory=/var/www/17nas-chatgpt-app
+EnvironmentFile=/etc/17nas-chatgpt-app.env
+ExecStart=/usr/bin/node /var/www/17nas-chatgpt-app/dist/server.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+InaccessiblePaths=/var/www/17nas.com /var/lib/17nas /var/log/nginx /root
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+StandardOutput=null
+StandardError=null
+[Install]
+WantedBy=multi-user.target

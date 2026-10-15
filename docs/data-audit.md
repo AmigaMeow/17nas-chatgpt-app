@@ -14,7 +14,7 @@ Inspection of the site's implementation and existing snapshot establishes that o
 
 Own rows contain sample count n, successful samples k, and rate. The independent export selects only country totals and success counts. It suppresses own rates for n < 300. APNIC QM/QO/QP aggregate region codes are excluded; ISO country/territory codes, including HK/TW, remain. Global ranks use competition ranking over countries and territories present in the snapshot, not an assertion that every country worldwide is covered.
 
-The App reads only its dedicated exported KV copy. It never crawls the page or calls the internal website statistics API.
+The App reads only its dedicated exported local snapshot. It never crawls the page or calls the internal website statistics API.
 
 ## Browser tests
 

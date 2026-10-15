@@ -1,22 +1,36 @@
 # Verification record
 
-Verified locally on 2026-10-14. This is a development preview, not an approved or deployed ChatGPT App.
+Verified on 2026-10-14. The independent service runs on the existing server. The production IPv6-only probe is verified. Public HTTPS MCP hosting at mcp.17nas.com is verified; real ChatGPT integration remains pending. See [real-environment checklist](chatgpt-live-test.md).
 
-- App: 9 Worker tests passed, including atomic parallel query ordinals, UTC date rollover, rate limiting, rejected IP parameters, separate statistics sources, locale handling, and MCP initialization/resource access.
-- TypeScript checks passed for the Worker and widget. Production dependency audit reported no vulnerabilities.
-- MCP companion: 4 tests passed; stdio exposed all 7 tools. The 1.1.0 npm package passed packaging checks but has not been published.
-- Independent aggregate exporter: 4 tests passed. The local App API read the filtered production snapshot without accessing the website's internal API.
-- Chromium standalone preview: the card rendered, language selection switched to simplified Chinese, and the query button returned a country query ordinal. No browser errors were reported. The local development country is simulated and does not establish a real user's location.
-- The card showed insufficient 17NAS samples for US separately from APNIC Labs rankings and displayed the missing IPv6 probe configuration as an unavailable result.
-- Revised card layout: desktop and 390px mobile previews rendered without browser errors or horizontal overflow. Chinese language selection worked; an injected HTTP 503 displayed the diagnostics panel. All five APNIC ranking rows rendered progress bars. The initial state explicitly says the check has not started.
-- Reference-based visual refinement: rebuilt and checked desktop and 390px previews, Chinese language switching and an injected HTTP 503. All information cards use 12px corners and 20px padding; the five ranking bars use dark, medium and pale green according to rank. Browser errors and horizontal overflow were absent. Screenshots were refreshed locally.
+- TypeScript checks and build pass. Fourteen App/server tests cover tools, source separation, the 300-sample threshold, rejected IP parameters, statistics cache expiry, country fallback, trusted proxy handling and rate limiting. Idle rate-limit state expires automatically.
+- The independent aggregate exporter passes four tests. Its hourly export is installed; the App reads only its filtered copy and its own GeoIP database.
+- The systemd service cannot read the website directory, website state, Nginx logs or root home. Runtime access checks confirmed these restrictions. Access/error logs are disabled for the isolated local proxy.
+- Local Nginx integration returned HTTP 200 for health, network, statistics, probe, widget, policy and flag assets. MCP initialization, resource listing and all five tools passed. The eleventh request in a minute returned a localized HTTP 429. Spoofed client-IP headers did not override trusted transport metadata.
+- Browser regression passed all five card kinds, automatic detection, missing statistics, probe/network failures, flags, sample counts 0/299/300/301, repeated disclosure toggles and narrow layouts. Simulated iframe height returned to 321px after eight disclosure cycles. Screenshots and probe responses are simulated; they do not prove production IPv6 connectivity or real ChatGPT sizing.
+- Flag bindings were FR → fr.svg, IN → in.svg, FK → fk.svg, MY → my.svg and DE → de.svg. Assets are bundled from pinned flag-icons 7.2.3; unsupported or failed flags use neutral placeholders.
+- Query counters are removed from this release. No KV, Durable Objects or Cloudflare account access is required.
 
-The browser check found an inline JavaScript build defect: string replacement interpreted literal replacement tokens in bundled JavaScript. The build now uses a callback and checks the final inline module syntax before writing output.
+## Existing website capability audit
 
-Local screenshots were saved under ignored `artifacts/card-en.png`, `artifacts/card-zh.png`, `artifacts/card-mobile.png`, and `artifacts/card-error.png`. They show a standalone preview, not a ChatGPT session.
+Both https://17nas.com/ipv6-test.php and https://17nas.com/ip-test.php returned HTTP 200. The IPv6 browser code probes third-party IPv6 endpoints that return addresses, then uses website-specific metadata and result-recording logic. The IP page calls /api/ip/detect.php, whose implementation returns IP/ASN and caches per-IP result data. These interfaces are not used by the App.
 
-Remaining production requirements are tracked in [launch-gates.md](launch-gates.md): correct Cloudflare account access, bindings and secrets, a verified IPv6-only probe endpoint, fault-safe abuse deduplication, platform retention/logging verification, translations, and directory submission. Budget alerts and the export schedule have not been activated.
+The existing v6.17nas.com name resolves to both A and AAAA records. Its successful HTTP response alone does not establish an IPv6-only browser path. A dedicated isolated probe must avoid IP responses, website recording and IPv4 fallback.
 
-## Intent-card local verification (2026-10-14)
+app.17nas.com belongs to another project. The newly prepared local HTTP vhost for it has been disabled; no DNS change was made. The service and widget now pin https://mcp.17nas.com at build time and runtime. DNS was added by the operator; public TLS/MCP verification is tracked separately from real ChatGPT testing.
 
-Five MCP tools are routed to connection, country attribution, NAT guidance, statistics and combined cards. Worker tests validate tool schemas and selected card kind. A Playwright smoke run (`node scripts/test-widget.mjs`, with built `dist` served locally on port 8788) verifies automatic probe requests, no requests for NAT guidance, no probe/count for statistics, preservation of an explicit country, hidden insufficient samples, expandable legal links, no narrow-screen overflow and no browser script errors. Failure checks confirm an unknown result after probe failure and preserve successful connectivity after counter failure. Screenshots under ignored `artifacts/card-intent-*-zh.png` use simulated responses; they are layout evidence, not real country statistics or production IPv6 validation. Public NAT and statistics destination pages returned HTTP 200. App privacy/terms still require deployed-link verification.
+No GitHub push, directory submission or production ChatGPT verification is claimed here. Five languages remain pending professional translation.
+
+## Public endpoint verification, 2026-10-14 17:23 UTC
+
+- Nginx uses a dedicated MCP TLS listener and SNI route. The probe destination-address route and existing website listeners are unchanged. App access/error logs remain disabled.
+- The mcp.17nas.com certificate was issued successfully, expires 2027-01-12, and has automatic renewal configured.
+- Public health/config returned 200. Public MCP initialization negotiated 2025-06-18; tools/list returned all five tools; all five tools/call requests succeeded. Resource metadata uses text/html;profile=mcp-app and allows only the App origin and IPv6 probe for connections.
+- Public widget, privacy, terms and MY/DE/FK flag assets returned 200. API OPTIONS returned 204 with Access-Control-Allow-Origin: *.
+- Existing website returned 200. The probe returned 200 over IPv6 with valid TLS and only {"ipv6Status":"supported"}; IPv4 connection failed (curl exit 7, HTTP 000). This test originates on the server, not a real ChatGPT user's network.
+- Cloudflare returned 403 / error 1010 (browser_signature_banned) to the default Python-urllib user agent. Curl and a request using its user agent succeeded. Actual ChatGPT connector access must be checked before treating the proxy as compatible with production AI clients; no Cloudflare account settings were changed.
+
+Public availability is verified separately from the pending authenticated ChatGPT iframe and multi-network tests.
+
+## Local browser connection display upgrade
+
+TypeScript checks, bundle build and 15 Vitest cases passed. Chromium simulated fixtures cover all five card intents, reserved IPv4/IPv6 address display, independent probe/API failures, conversation locale precedence over host locale, clipboard success/denial, flag code bindings/fallbacks, own-sample boundaries 0/299/300/301, 320px layout and repeated standard bridge resize. Images in `artifacts/card-intent-*-zh.png` use simulated documentation addresses, not live user data. No GitHub push, production deploy or authenticated ChatGPT console capture was performed for this upgrade.

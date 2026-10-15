@@ -1,0 +1,10 @@
+[Unit]
+Description=Renew isolated 17NAS IPv6 probe certificate
+After=network-online.target nginx.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/opt/17nas-probe/lego run --accept-tos --email hello@17nas.com --domains ipv6only.17nas.com --path /var/lib/17nas-probe-acme --tls --tls.address 127.0.0.1:4449 --http-timeout 30 --no-random-sleep --deploy-hook /opt/17nas-probe/reload-nginx.sh
+TimeoutStartSec=180

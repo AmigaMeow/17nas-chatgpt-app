@@ -1,8 +1,27 @@
 import {spawnSync} from 'node:child_process';
 import {build} from 'esbuild';
-import {mkdir,readFile,writeFile,cp} from 'node:fs/promises';
+import {mkdir,readFile,writeFile,cp,readdir} from 'node:fs/promises';
+const codes=(await readdir('node_modules/flag-icons/flags/4x3')).filter(x=>x.endsWith('.svg')).map(x=>x.slice(0,-4)).sort();
+if(JSON.stringify(codes)!==JSON.stringify(JSON.parse(await readFile('widget/flag-codes.json','utf8'))))throw new Error('Flag manifest differs from pinned flag-icons assets');
 await mkdir('dist',{recursive:true});
-await build({entryPoints:['widget/main.ts'],bundle:true,format:'esm',target:'es2022',outfile:'dist/widget.js',minify:true});
+let defaultOrigin = process.env.APP_PUBLIC_ORIGIN;
+if (!defaultOrigin) {
+  for (const envPath of ['/etc/17nas-chatgpt-app.env', '.env']) {
+    try {
+      const content = await readFile(envPath, 'utf8');
+      for (const line of content.split(String.fromCharCode(10))) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('APP_PUBLIC_ORIGIN=')) {
+          defaultOrigin = trimmed.slice('APP_PUBLIC_ORIGIN='.length).trim();
+          break;
+        }
+      }
+      if (defaultOrigin) break;
+    } catch {}
+  }
+}
+const publicOrigin = new URL(defaultOrigin ?? 'https://mcp.17nas.com').origin;
+await build({entryPoints:['widget/main.ts'],define:{APP_PUBLIC_ORIGIN:JSON.stringify(publicOrigin)},bundle:true,format:'esm',target:'es2022',outfile:'dist/widget.js',minify:true});
 const template=await readFile('widget/index.html','utf8');
 const js=await readFile('dist/widget.js','utf8');
 const html=template.replace('/* WIDGET_BUNDLE */',()=>js.replaceAll('</script','<\\/script'));
@@ -17,3 +36,4 @@ await cp('public','dist',{recursive:true});
 // Serve SVG flags from our own origin, including the upstream MIT notice.
 await cp('node_modules/flag-icons/flags/4x3','dist/flags',{recursive:true});
 await cp('node_modules/flag-icons/LICENSE','dist/flags/LICENSE.txt');
+await build({entryPoints:['src/server.ts'],bundle:true,platform:'node',format:'esm',target:'node22',packages:'external',outfile:'dist/server.mjs'});
