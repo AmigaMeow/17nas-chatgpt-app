@@ -55,7 +55,7 @@ export async function startServer() {
   const pathname=new URL(request.url).pathname;
   const path=pathname==='/'?'/index.html':pathname;
   if(request.method!=='GET'&&request.method!=='HEAD')return new Response(null,{status:405});
-  if(!/^\/(?:index\.html|support\.html|widget\.html|privacy\.html|terms\.html|flags\/[a-z]{2}\.svg)$/.test(path))return new Response(null,{status:404});
+  if(!/^\/(?:index\.html|support\.html|demo\.html|widget\.html|privacy\.html|terms\.html|flags\/[a-z]{2}\.svg)$/.test(path))return new Response(null,{status:404});
   try{return new Response(request.method==='HEAD'?null:await readFile(resolve(root,'.'+path)),{headers:{'Content-Type':path.endsWith('.svg')?'image/svg+xml':'text/html; charset=utf-8','Cache-Control':path.endsWith('.html')?'no-cache, no-store, must-revalidate':'public, max-age=3600','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});}catch{return new Response(null,{status:404});}
  }}};
  const limiter=new RateLimiter(),trustNginx=process.env.APP_TRUST_NGINX==='1';

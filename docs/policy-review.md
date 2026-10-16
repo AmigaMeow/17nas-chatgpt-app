@@ -1,10 +1,10 @@
-# Policy wording for owner review
+# Owner-approved policy text
 
-Prepared 2026-10-16. This is a proposed revision, not a deployed policy or a legal attestation. Current public privacy and terms pages remain marked as drafts. The owner must review the factual statements and resolve the decisions below before the draft labels are removed.
+Accepted by the owner on 2026-10-16, including operator name jiahui zhang / 17NAS and the support-message retention rule. Authorized for publication. This acceptance is separate from the developer’s personal Portal legal/policy attestations.
 
-## Proposed privacy text
+## Privacy text
 
-Operator: jiahui zhang, trading as 17NAS. Contact: hello@17nas.com. Confirm the exact operator name matches the intended publishing identity before deployment.
+Operator: jiahui zhang, trading as 17NAS. Contact: hello@17nas.com.
 
 IPv6 Checker & Stats checks browser connection reachability, estimates country-level network attribution and displays aggregate IPv6 statistics. Network requests carry a source address. The application processes it transiently for country attribution, observed protocol and abuse prevention. The application does not return raw IP addresses, ASNs, ISP names or cities in its results, and does not persist individual connection measurements.
 
@@ -12,7 +12,7 @@ The application's rate limiter keeps minute-scoped HMAC entries only in process 
 
 The browser card displays country, observed protocols, HTTP request duration and probe status. Completed measurements may be provided to ChatGPT as app context or shared using Explain results in chat. OpenAI processes conversations according to its own policies and user settings; the app's storage practices do not control OpenAI conversation retention. HTTP duration is not ping latency. VPNs or proxies can affect country attribution, and a failed IPv6 probe remains unverified.
 
-The application reads country-level aggregates from a separate exporter. Own aggregate statistics use a 30-day source window and are hidden below 300 samples. APNIC figures are separately labeled, dated population statistics. The app caches aggregate snapshots for one hour and uses last-good data for at most24hours. These are aggregate records, not retained individual browser measurements.
+The application reads country-level aggregates from a separate exporter. Own aggregate statistics use a 30-day source window and are hidden below 300 samples. APNIC figures are separately labeled, dated population statistics. The app caches aggregate snapshots for one hour and uses last-good data for at most 24 hours. These are aggregate records, not retained individual browser measurements.
 
 The service uses Cloudflare and a hosting provider to deliver requests. Those providers handle source addresses and other connection/security information under their own policies and settings. Cloudflare can use security-related cookies. The statement that the application does not store raw addresses does not promise that every infrastructure provider has zero logs or zero retention. OpenAI's and the providers' records are outside the application's own measurement store.
 
@@ -20,31 +20,27 @@ The external NAT test opens on a separate website. Its processing and results ar
 
 If you contact support, your message and contact information are processed to answer your request. Do not send IP addresses, ASNs, precise location, credentials or full network captures. Support messages and contact information are deleted within 90 days after the request is resolved. You may request earlier deletion by emailing hello@17nas.com. This describes records held by the operator; copies or backups controlled by the email provider follow its settings and policies.
 
-For privacy questions and requests concerning records held by the operator, contact hello@17nas.com. The operator can explain what it holds and how a request can be handled without asking for unnecessary information. Requests concerning OpenAI conversations or infrastructure-provider records must also follow the relevant provider's processes. No sale of app data or advertising use is part of the stated service; the owner must confirm this statement before publication.
+For privacy questions and requests concerning records held by the operator, contact hello@17nas.com. The operator can explain what it holds and how a request can be handled without asking for unnecessary information. Requests concerning OpenAI conversations or infrastructure-provider records must also follow the relevant provider's processes. No sale of app data or advertising use is part of the stated service.
 
-## Proposed terms text
+## Terms text
 
-Operator: jiahui zhang / 17NAS. Contact: hello@17nas.com. Effective date is set when the operator accepts the final text.
+Operator: jiahui zhang / 17NAS. Contact: hello@17nas.com. Effective date: 2026-10-16.
 
 IPv6 Checker & Stats and its linked NAT test are free and offer no purchase or subscription flow. The app checks browser connectivity, displays country attribution and HTTP request duration, and provides dated IPv6 population statistics. The NAT card opens a separate external test guide.
 
 Results depend on network conditions, browser restrictions, VPNs, proxies, geolocation and provider availability. A successful probe establishes reachability to that probe through the active browser path. A failed probe is unverified, not proof that IPv6 is unavailable. HTTP request duration is not ping. The app does not diagnose a game disconnection cause or change router settings.
 
-APNIC and eligible 17NAS aggregates are separate datasets and are labeled with source dates and scope. Own samples below300 are hidden. Statistics are estimates for reference, not measurements of an individual user's connection.
+APNIC and eligible 17NAS aggregates are separate datasets and are labeled with source dates and scope. Own samples below 300 are hidden. Statistics are estimates for reference, not measurements of an individual user's connection.
 
 Use the service responsibly. Do not bypass rate limits, scan arbitrary targets or attempt unauthorized access. The service may restrict abusive requests. Availability, uninterrupted operation and perfect accuracy are not guaranteed. Mandatory rights under applicable law are not waived by these terms.
 
-English and Simplified/Traditional Chinese are supported. Other listed locales currently use English fallback while translation review is pending. Report problems or ask questions at hello@17nas.com. The owner confirmed on 2026-10-16 that hello@17nas.com receives email.
+English and Simplified/Traditional Chinese are supported. Other listed locales currently use English fallback while translation review is pending. Report problems or ask questions at hello@17nas.com.
 
-## Owner decisions still required
+## Operational record
 
-1. Confirm the exact operator/publishing name. Support mailbox reception was confirmed by the owner on 2026-10-16.
-2. Owner accepted on 2026-10-16: delete support messages within 90 days after resolution and accept earlier deletion requests by email. This is an operator process, not an automated code feature. Confirm any additional collection/analytics not described above. Commerce was confirmed absent.
-3. Review provider security logs, backup settings and processor terms; retain the provider limitation rather than claiming universal zero retention.
-4. Review and accept final policy text. The authorized developer personally completes the Portal's current legal/policy attestations; accepting a code change is not an attestation.
+Support mailbox reception confirmed. Owner will delete support messages within 90 days after resolution and accept earlier deletion requests. This is an operator process, not an automated mailbox feature. Provider-controlled copies follow provider settings/policies.
 
-## Primary references checked
+## References
 
 - https://developers.cloudflare.com/fundamentals/reference/policies-compliances/cloudflare-cookies/
 - https://openai.com/policies/privacy-policy/
-- https://developers.openai.com/plugins/deploy/submission

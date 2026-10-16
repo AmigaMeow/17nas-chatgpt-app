@@ -1,7 +1,7 @@
 {
   "author": {
     "email": "hello@17nas.com",
-    "name": "17NAS",
+    "name": "jiahui zhang",
     "url": "https://17nas.com"
   },
   "description": "Check IPv6 support, inspect network connectivity, and explore APNIC Labs global rankings.",
@@ -33,7 +33,7 @@
           "Show global IPv6 adoption statistics and APNIC country rankings.",
           "Show me how to check whether NAT restrictions could be involved in multiplayer game disconnections."
         ],
-        "developerName": "17NAS",
+        "developerName": "jiahui zhang",
         "displayName": "IPv6 Checker & Stats",
         "logo": "./assets/logo.png",
         "longDescription": "Check browser IPv6 reachability, observed IPv4/IPv6 transports and HTTP request duration in an interactive ChatGPT card. View country-level attribution and share the completed measurement for explanation. Explore APNIC Labs global IPv6 adoption and country rankings with source dates, separately from eligible 17NAS country aggregates. The NAT card opens an external test guide; it does not determine NAT type or diagnose game disconnections. Failed probes remain unverified, and HTTP request duration is not ping latency. The application processes source addresses transiently for networking, country estimation and abuse protection; raw IP addresses, ASNs and cities are not included in app results. Infrastructure providers process network requests under their own policies.",
@@ -92,7 +92,7 @@
             }
           ]
         },
-        "demo_recording_url": "https://youtu.be/mxxj5gtbUA4",
+        "demo_recording_url": "https://mcp.17nas.com/demo.html",
         "commerce": false,
         "commerce_description": "The plugin and the linked NAT test are free. No purchases, payments, or subscriptions are offered."
       },
