@@ -18,7 +18,7 @@ The service uses Cloudflare and a hosting provider to deliver requests. Those pr
 
 The external NAT test opens on a separate website. Its processing and results are separate from this inline app. The app does not itself determine NAT type, CGNAT, packet loss or a disconnection cause.
 
-If you contact support, your message and contact information are processed to answer your request. Do not send IP addresses, ASNs, precise location, credentials or full network captures. The operator must confirm support-message retention and deletion practices before this paragraph is finalized.
+If you contact support, your message and contact information are processed to answer your request. Do not send IP addresses, ASNs, precise location, credentials or full network captures. Support messages and contact information are deleted within 90 days after the request is resolved. You may request earlier deletion by emailing hello@17nas.com. This describes records held by the operator; copies or backups controlled by the email provider follow its settings and policies.
 
 For privacy questions and requests concerning records held by the operator, contact hello@17nas.com. The operator can explain what it holds and how a request can be handled without asking for unnecessary information. Requests concerning OpenAI conversations or infrastructure-provider records must also follow the relevant provider's processes. No sale of app data or advertising use is part of the stated service; the owner must confirm this statement before publication.
 
@@ -34,12 +34,12 @@ APNIC and eligible 17NAS aggregates are separate datasets and are labeled with s
 
 Use the service responsibly. Do not bypass rate limits, scan arbitrary targets or attempt unauthorized access. The service may restrict abusive requests. Availability, uninterrupted operation and perfect accuracy are not guaranteed. Mandatory rights under applicable law are not waived by these terms.
 
-English and Simplified/Traditional Chinese are supported. Other listed locales currently use English fallback while translation review is pending. Report problems or ask questions at hello@17nas.com. The owner must confirm the support address works before publication.
+English and Simplified/Traditional Chinese are supported. Other listed locales currently use English fallback while translation review is pending. Report problems or ask questions at hello@17nas.com. The owner confirmed on 2026-10-16 that hello@17nas.com receives email.
 
 ## Owner decisions still required
 
-1. Confirm operator/publishing name and that hello@17nas.com receives support and privacy requests.
-2. Confirm support-message retention and deletion handling, plus any additional collection/analytics/commerce not described above. No extra practices should be silently omitted.
+1. Confirm the exact operator/publishing name. Support mailbox reception was confirmed by the owner on 2026-10-16.
+2. Owner accepted on 2026-10-16: delete support messages within 90 days after resolution and accept earlier deletion requests by email. This is an operator process, not an automated code feature. Confirm any additional collection/analytics not described above. Commerce was confirmed absent.
 3. Review provider security logs, backup settings and processor terms; retain the provider limitation rather than claiming universal zero retention.
 4. Review and accept final policy text. The authorized developer personally completes the Portal's current legal/policy attestations; accepting a code change is not an attestation.
 

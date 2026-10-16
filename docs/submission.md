@@ -52,7 +52,7 @@ Live server tool annotations declare readOnlyHint true, openWorldHint true and d
 
 1. Confirm the exact verified individual developer name in the intended Personal organization/project.
 2. Verify actual playback of the supplied YouTube recording without reviewer-specific access problems.
-3. Resolve operator approval of the published privacy/terms drafts, provider processing/retention scope and support reception. Do not replace unknown practices with zero-retention claims.
+3. Resolve operator approval of the published privacy/terms drafts, provider processing/retention scope. Support reception and the 90-day-after-resolution deletion rule (with earlier deletion requests) were confirmed by the owner on 2026-10-16. Do not replace unknown practices with zero-retention claims.
 4. Update the existing draft ZIP, check imported metadata, preserved connection and latest MCP scan. Reupload can reset attestations.
 5. Run and record all eight cases against that exact saved version. Local harnesses and development recordings are not substitutes.
 6. The authorized developer personally completes legal/policy attestations and approves the concrete final submission. No attestations or final submit action have been taken.
@@ -61,10 +61,10 @@ Live server tool annotations declare readOnlyHint true, openWorldHint true and d
 
 PR: https://github.com/AmigaMeow/17nas-chatgpt-app/pull/2 (draft, unmerged).
 
-Production code is `d3b374854027ab6f3d99c139934f9204ab273c88`, service active, health0.2.1 as checked on 2026-10-16. This is separate from main and from any pending package metadata changes. No new production deployment is part of this documentation/package update.
+Production code is `7564cfafe0cca3b2a18c85f17bbede232539825b`, service active, health 0.2.1 as checked on 2026-10-16. This is separate from main and from the saved Portal package. The naming patch was deployed under the owner’s existing authorization, with configuration/data preserved.
 
 Official flow: https://developers.openai.com/plugins/deploy/submission
 
 ## MCP scan follow-up — 2026-10-16
 
-The Portal scan reported an unclear name for `check_nat`. The candidate now advertises `get_nat_troubleshooting_guide` with an explicit NAT expansion and guide-only description. Cached `check_nat` calls are normalized before MCP dispatch. Production deployment and a completed follow-up scan are pending. The saved 0.2.0 draft has not been replaced.
+The Portal scan reported an unclear name for `check_nat`. The candidate now advertises `get_nat_troubleshooting_guide` with an explicit NAT expansion and guide-only description. Cached `check_nat` calls are normalized before MCP dispatch. Deployment completed at code `7564cfa`. Public HTTPS tool listing advertises the canonical name, and both canonical and legacy calls returned `natStatus: not_tested`. Build, TypeScript and 23 existing tests passed. The first loopback MCP check was rejected with 429 because it lacked trusted proxy source metadata; the deployment script restored the old build. The corrected verification used the existing public HTTPS gateway and passed after redeployment. The completed follow-up Portal scan on 2026-10-16 showed “No findings in the latest MCP scan”, the canonical name in the five-tool list, and Domain verified. This is a scan result, not review approval. The saved 0.2.0 draft has not been replaced.
