@@ -2,14 +2,48 @@ import {describe,it,expect,vi,afterEach} from 'vitest';
 import {mkdtemp,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {once} from 'node:events';
 import {handleRequest,type AppEnv,type NetworkContext} from '../src/index';
 import snapshot from './fixtures/snapshot.json';
 process.env.APP_NO_START='1';
-const {RateLimiter,sourceAddress,FileStats}=await import('../src/server');
+const {RateLimiter,sourceAddress,FileStats,startServer}=await import('../src/server');
 const env:AppEnv={STATS:{get:async()=>snapshot},ASSETS:{fetch:async()=>new Response('asset')},PUBLIC_ORIGIN:'https://app.17nas.com',IPV6_PROBE_URL:'',RELEASE:'0.1.0'};
 const request=(path:string,context:NetworkContext={region:'US',ipv6:false,limited:false},method='GET')=>handleRequest(new Request(env.PUBLIC_ORIGIN+path,{method}),env,context);
 afterEach(()=>vi.useRealTimers());
 describe('Isolated server API',()=>{
+ it('does not log arbitrary request paths containing private-looking data',async()=>{
+  const oldPort=process.env.APP_PORT;process.env.APP_PORT='0';
+  const log=vi.spyOn(console,'log').mockImplementation(()=>{});
+  const server=await startServer();
+  try{
+   await once(server,'listening');
+   const address=server.address();if(!address||typeof address==='string')throw new Error('Missing test listener');
+   await fetch('http://127.0.0.1:'+address.port+'/192.0.2.7-AS64500-Ipswich');
+   const output=JSON.stringify(log.mock.calls);
+   for(const sensitive of ['192.0.2.7','AS64500','Ipswich'])expect(output).not.toContain(sensitive);
+  }finally{
+   await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
+   log.mockRestore();if(oldPort===undefined)delete process.env.APP_PORT;else process.env.APP_PORT=oldPort;
+  }
+ });
+ it('serves the app overview and support pages without allowing arbitrary files',async()=>{
+  const oldPort=process.env.APP_PORT,oldRoot=process.env.APP_ASSETS_DIR;
+  process.env.APP_PORT='0';process.env.APP_ASSETS_DIR=join(process.cwd(),'public');
+  const server=await startServer();
+  try{
+   await once(server,'listening');const address=server.address();
+   if(!address||typeof address==='string')throw new Error('Missing test listener');
+   const origin='http://127.0.0.1:'+address.port;
+   for(const path of ['/','/index.html','/support.html']){
+    const response=await fetch(origin+path);expect(response.status).toBe(200);
+    expect(await response.text()).toContain('IPv6 Checker &amp; Stats');
+   }
+   expect((await fetch(origin+'/package.json')).status).toBe(404);
+  }finally{
+   await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
+   for(const [key,value] of [['APP_PORT',oldPort],['APP_ASSETS_DIR',oldRoot]]){if(value===undefined)delete process.env[key!];else process.env[key!]=value;}
+  }
+ });
  it('has no count endpoint, ordinal or plaintext address output',async()=>{
   expect((await request('/api/ipv6-query',undefined,'POST')).status).toBe(404);
   const body=await(await request('/api/network')).json();

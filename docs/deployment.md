@@ -28,6 +28,16 @@ Three consecutive IPv6 curl requests using normal public DNS and certificate ver
 
 The HTTPS requests were made from this server with its primary IPv6 bound as the source; successful certificate issuance also required the CA's external TLS-ALPN validation. These checks do not constitute a real ChatGPT iframe or an independent external browser connectivity test. The App configuration endpoint now returns the verified probe URL. The public App hostname is now confirmed as `mcp.17nas.com`; `app.17nas.com` is untouched.
 
-## Pending local connection-display upgrade
+## Connection-display upgrade — deployed 2026-10-16
 
-The latest local changes have not been deployed. The runtime reads only GeoLite2-City for country-level estimation; no ASN database is loaded or provisioned. Rebuild with the production `APP_PUBLIC_ORIGIN`. Check access/error logging remains disabled and browser connection/probe responses remain no-store at every proxy/cache. Updated probe responses include a transient IPv6 connection object; earlier minimal-response verification above describes the previous deployed version. Retest CSP and model context in the actual ChatGPT client after deployment.
+The owner authorized deployment. Code `d3b374854027ab6f3d99c139934f9204ab273c88` is deployed at `/var/www/17nas-chatgpt-app`, and health reports0.2.1. Old dist/source evidence is backed up at `/var/backups/17nas-chatgpt-app/20261015T170105Z-pre-0.2.1`. The runtime reads GeoLite2-City only for country-level estimation; no ASN database is loaded. Environment, snapshots, GeoIP data and Nginx configuration were preserved. Real ChatGPT exercised combined measurement, explicit result sharing, statistics and NAT guidance; independent/native-client comparisons remain incomplete. Earlier probe checks above describe their dated deployed version. See docs/submission-demo-fixes.md and docs/submission.md for the current evidence and limits.
+
+## NAT guide naming correction — 2026-10-16
+
+Under the existing deployment authorization, `7564cfafe0cca3b2a18c85f17bbede232539825b` replaces `check_nat` in the advertised tools with `get_nat_troubleshooting_guide`. Cached legacy calls are normalized before dispatch. The prior build/source was saved to `/var/backups/17nas-chatgpt-app/20261016T002412Z-pre-nat-guide-name`. The first loopback MCP verification received 429 because no trusted proxy source header was present, triggering a full source/dist rollback. Redeployment then passed verification over the existing public HTTPS gateway: canonical listing, canonical/legacy guide calls, service active and health 0.2.1. No environment, Nginx, database, snapshot or widget changes were made.
+
+The completed Portal rescan showed Domain verified, the new NAT guide action and “No findings in the latest MCP scan”. The saved 0.2.0 draft remains unchanged and unsubmitted.
+
+## Approved policies and public demo — 2026-10-16
+
+Deployed `593a4005b75e9f426b790d70fb9cd6233440439d` under explicit owner approval. Policies are effective 2026-10-16. `/demo.html` serves the English walkthrough; exact Nginx alias `/demo/ipv6-demo-60s.mp4` serves the approved MP4 from `/var/www/17nas-app-demo/`, with byte-range support and no access logging. A separate public directory was required because the app-data parent correctly denies Nginx traversal. No protected app-data permissions were widened. Source/dist/Nginx backups are at `/var/backups/17nas-chatgpt-app/20261016T002931Z-pre-policy-demo` and `/var/backups/17nas-chatgpt-app/20261016T003109Z-pre-public-demo-path`. Publicly downloaded bytes match the approved SHA-256 `f7e6d940cef278015b5150d7e8ba883dbdb5a838f525aa6fcce9eba29a6b8cd9`; range requests return 206.

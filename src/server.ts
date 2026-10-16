@@ -51,10 +51,11 @@ export async function startServer() {
  const root=resolve(process.env.APP_ASSETS_DIR??dirname(fileURLToPath(import.meta.url)));
  let geo:Reader<CityResponse>|null=null;
  try{geo=await open<CityResponse>(process.env.APP_GEO_DB??'/var/lib/17nas-chatgpt-app/geo/GeoLite2-City.mmdb');}catch{/* Country falls back to Unknown. */}
- const env:AppEnv={PUBLIC_ORIGIN:process.env.APP_PUBLIC_ORIGIN??'http://127.0.0.1:8791',IPV6_PROBE_URL:process.env.APP_IPV6_PROBE_URL??'',RELEASE:'0.2.0',STATS:new FileStats(process.env.APP_STATS_FILE??'/var/lib/17nas-chatgpt-app/stats/snapshot.json'),ASSETS:{async fetch(request){
-  const path=new URL(request.url).pathname;
+ const env:AppEnv={PUBLIC_ORIGIN:process.env.APP_PUBLIC_ORIGIN??'http://127.0.0.1:8791',IPV6_PROBE_URL:process.env.APP_IPV6_PROBE_URL??'',RELEASE:'0.2.1',STATS:new FileStats(process.env.APP_STATS_FILE??'/var/lib/17nas-chatgpt-app/stats/snapshot.json'),ASSETS:{async fetch(request){
+  const pathname=new URL(request.url).pathname;
+  const path=pathname==='/'?'/index.html':pathname;
   if(request.method!=='GET'&&request.method!=='HEAD')return new Response(null,{status:405});
-  if(!/^\/(?:widget\.html|privacy\.html|terms\.html|flags\/[a-z]{2}\.svg)$/.test(path))return new Response(null,{status:404});
+  if(!/^\/(?:index\.html|support\.html|demo\.html|widget\.html|privacy\.html|terms\.html|flags\/[a-z]{2}\.svg)$/.test(path))return new Response(null,{status:404});
   try{return new Response(request.method==='HEAD'?null:await readFile(resolve(root,'.'+path)),{headers:{'Content-Type':path.endsWith('.svg')?'image/svg+xml':'text/html; charset=utf-8','Cache-Control':path.endsWith('.html')?'no-cache, no-store, must-revalidate':'public, max-age=3600','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});}catch{return new Response(null,{status:404});}
  }}};
  const limiter=new RateLimiter(),trustNginx=process.env.APP_TRUST_NGINX==='1';
@@ -72,7 +73,6 @@ export async function startServer() {
     return;
    }
    const limited=(route.startsWith('/api/')||route==='/mcp')&&req.method!=='OPTIONS'&&(!source||limiter.limited(source));
-   console.log(`[17NAS Server] ${new Date().toISOString()} ${req.method} ${route} limited=${limited} isIP=${isIP(source)}`);
    let region='XX';try{const place=geo?.get(source);region=place?.country?.iso_code??'XX';}catch{}
    let connection:BrowserConnection|undefined;
    if(!limited&&req.method==='GET'&&['/api/network','/api/probe'].includes(route)&&source){
