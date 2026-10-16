@@ -40,7 +40,7 @@ Rollback target: previous source `cce022b806bf4ebd7605c2506b200d210a2459ba` plus
 
 ## Outstanding evidence
 
-The three demonstration flows and result sharing were exercised in real ChatGPT; see the dated record below. All five individual review cases have not been independently completed. A successful native IPv6 network comparison, native clients, provider log retention, final operator policy review and public review status remain unverified. The slideshow HTML is a supplementary presentation, not the actual-host demonstration recording. A real recording and reviewer-accessible playback URL remain required.
+The three demonstration flows and result sharing were exercised in real ChatGPT; see the dated record below. All five individual review cases have not been independently completed. A successful native IPv6 network comparison, native clients, provider log retention, final operator policy review and public review status remain unverified. The slideshow HTML is a supplementary presentation, not the actual-host demonstration recording. The final local v4 recording is complete; the owner supplied https://youtu.be/mxxj5gtbUA4. Actual remote playback remains unverified because YouTube showed a sign-in/bot check in the unauthenticated session. See docs/submission.md for current readiness.
 
 ## Live deployment and browser record — 2026-10-16 Asia/Taipei
 
@@ -59,3 +59,10 @@ Real conversations (account access required):
 
 - https://chatgpt.com/c/6ad1076a-44c0-83ee-b726-004b96c221ca
 - https://chatgpt.com/c/6ad1095f-cfd4-83ee-a6ba-b637162dcf61
+
+
+## Submission material update — 2026-10-16
+
+The owner rejected earlier edits for blur and composer overlap. The final local v4 video was re-recorded in real ChatGPT using a taller 1280×900 CSS viewport and native 1920×1350 PNG frames. A vertical 1920×1080 crop keeps each result card visible above the composer without spatial upscaling. The 20-second preview and 60-second walkthrough passed full decode and browser playback checks; actual encoded frames at10s/37s/58s showed the complete connection, statistics and NAT cards. The connection take measured319ms,KR,IPv4 observed and an unverified IPv6 probe timeout; the actual share click produced a matching model summary. This supersedes earlier edited-demo descriptions, not the historical individual measurement values above.
+
+The owner supplied the YouTube URL above and confirmed individual identity, all platform-permitted countries and no commerce. The Personal organization shows Individual / Approved. The current saved Portal version is0.2.0, configured, not submitted and not published. New public-upload source and case definitions are in submission/ipv6-checker-stats. Privacy/terms operator acceptance, provider/support practices, remote playback and all exact saved-version cases remain gates. No legal attestation, draft replacement, final review submission or publication has occurred in this preparation pass.
