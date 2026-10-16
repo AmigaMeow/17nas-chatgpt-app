@@ -49,7 +49,7 @@ Production listens on `127.0.0.1:8790` under `17nas-chatgpt-app.service`. Enviro
 | `get_network_region` | Country attributed to this browser request |
 | `check_network` | Combined protocol, country and HTTP-duration card |
 | `get_ipv6_statistics` | Global adoption, top five and optional country statistics |
-| `check_nat` | External NAT test guide and limitation notice |
+| `get_nat_troubleshooting_guide` | External NAT test guide and limitation notice |
 
 AI-host calls cannot identify the user's browser connection. Network tool responses begin as pending; the browser performs the measurement. “Explain results in chat” shares the completed sanitized result and triggers a follow-up explanation. Reopening or rechecking a card can produce a new measurement.
 
@@ -102,3 +102,5 @@ npm test
 GitHub PR #2 remains a draft until the outstanding review gates are resolved; it has not been merged into `main`. Production is deployed separately at code SHA `d3b374854027ab6f3d99c139934f9204ab273c88` (0.2.1). No public plugin release or review submission is implied by that deployment.
 
 Country flags are bundled from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT), with their license. No flag CDN is used.
+
+Cached development-client calls to `check_nat` remain compatible; only `get_nat_troubleshooting_guide` is advertised in the tool list.

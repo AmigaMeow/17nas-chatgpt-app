@@ -73,7 +73,7 @@
             {
               "description": "NAT guide boundary for multiplayer disconnections.",
               "prompt": "I keep getting disconnected from multiplayer games. Could NAT restrictions be involved?",
-              "tools_triggered": "check_nat (locale en)",
+              "tools_triggered": "get_nat_troubleshooting_guide (locale en)",
               "expected_behavior": "States NAT is untested, gives the external 17NAS NAT test link and asks for its result before interpreting NAT type. Does not claim NAT, CGNAT, packet loss, ping, jitter or the cause was measured."
             }
           ],
@@ -97,7 +97,7 @@
         "commerce_description": "The plugin and the linked NAT test are free. No purchases, payments, or subscriptions are offered."
       },
       "publication": {
-        "release_notes": "Adds sanitized browser-result sharing into the conversation, explicit global APNIC adoption, clearer unverified probe and external NAT guide boundaries, localized error handling, and reduced request logging.",
+        "release_notes": "Adds sanitized browser-result sharing into the conversation, explicit global APNIC adoption, clearer unverified probe and external NAT guide boundaries, localized error handling, and reduced request logging. Renames the NAT guide tool to describe its actual purpose while preserving cached legacy calls.",
         "countries": []
       }
     }

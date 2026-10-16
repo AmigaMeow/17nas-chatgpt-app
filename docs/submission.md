@@ -64,3 +64,7 @@ PR: https://github.com/AmigaMeow/17nas-chatgpt-app/pull/2 (draft, unmerged).
 Production code is `d3b374854027ab6f3d99c139934f9204ab273c88`, service active, health0.2.1 as checked on 2026-10-16. This is separate from main and from any pending package metadata changes. No new production deployment is part of this documentation/package update.
 
 Official flow: https://developers.openai.com/plugins/deploy/submission
+
+## MCP scan follow-up — 2026-10-16
+
+The Portal scan reported an unclear name for `check_nat`. The candidate now advertises `get_nat_troubleshooting_guide` with an explicit NAT expansion and guide-only description. Cached `check_nat` calls are normalized before MCP dispatch. Production deployment and a completed follow-up scan are pending. The saved 0.2.0 draft has not been replaced.

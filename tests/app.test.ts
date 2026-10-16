@@ -44,10 +44,10 @@ describe('App MCP protocol',()=>{
  };
  it('initializes and exposes the card without using host IP or counting',async()=>{
   const init=await rpc('initialize',{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'test',version:'1'}});expect(init.result.serverInfo.name).toContain('17NAS');
-  const list=await rpc('tools/list');expect(list.result.tools.map((t:any)=>t.name)).toEqual(['check_ipv6_connection','get_network_region','check_nat','get_ipv6_statistics','check_network']);
+  const list=await rpc('tools/list');expect(list.result.tools.map((t:any)=>t.name)).toEqual(['check_ipv6_connection','get_network_region','get_nat_troubleshooting_guide','get_ipv6_statistics','check_network']);
   const prompts=await rpc('prompts/list');expect(prompts.result.prompts.map((p:any)=>p.name)).toEqual(['troubleshoot_game_nat','check_network_ipv6','view_ipv6_rankings','check_network_region']);
   const call=await rpc('tools/call',{name:'check_network',arguments:{locale:'zh-HK'}});expect(call.error).toBeUndefined();expect(call.result.structuredContent.locale).toBe('zh-TW');expect(call.result.structuredContent.localeSource).toBe('conversation');expect(call.result.content[0].text).toContain('佔位');expect(list.result.tools.find((t:any)=>t.name==='check_network').description).toContain('IPv4');expect(call.result.structuredContent.region).toBe('XX');expect(call.result.structuredContent.myRank).toBeUndefined();expect(call.result.structuredContent.cardKind).toBe('combined');
-  for(const [name,kind] of [['check_nat','nat'],['get_network_region','network'],['check_ipv6_connection','connection'],['get_ipv6_statistics','statistics']]){
+  for(const [name,kind] of [['get_nat_troubleshooting_guide','nat'],['get_network_region','network'],['check_ipv6_connection','connection'],['get_ipv6_statistics','statistics']]){
    const result=await rpc('tools/call',{name,arguments:name==='get_ipv6_statistics'?{country:'DE'}:{}});expect(result.result.structuredContent.cardKind).toBe(kind);expect(result.result.structuredContent.myRank).toBeUndefined();
    expect(result.result.structuredContent.requestedCountry).toBe(name==='get_ipv6_statistics'?'DE':null);
   }
