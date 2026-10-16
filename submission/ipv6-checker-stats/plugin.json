@@ -1,0 +1,105 @@
+{
+  "author": {
+    "email": "hello@17nas.com",
+    "name": "17NAS",
+    "url": "https://17nas.com"
+  },
+  "description": "Check IPv6 support, inspect network connectivity, and explore APNIC Labs global rankings.",
+  "homepage": "https://mcp.17nas.com/",
+  "keywords": [
+    "ipv6",
+    "network diagnostics",
+    "connectivity",
+    "nat test",
+    "apnic",
+    "network check"
+  ],
+  "license": "MIT",
+  "name": "ipv6-checker-stats",
+  "repository": "https://github.com/AmigaMeow/17nas-chatgpt-app",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "version": "0.2.1",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "brandColor": "#1a5f4a",
+        "capabilities": [
+          "Read"
+        ],
+        "category": "Developer Tools",
+        "composerIcon": "./assets/composer-icon.png",
+        "defaultPrompt": [
+          "Check my current network connection and IPv6 reachability.",
+          "Show global IPv6 adoption statistics and APNIC country rankings.",
+          "Show me how to check whether NAT restrictions could be involved in multiplayer game disconnections."
+        ],
+        "developerName": "17NAS",
+        "displayName": "IPv6 Checker & Stats",
+        "logo": "./assets/logo.png",
+        "longDescription": "Check browser IPv6 reachability, observed IPv4/IPv6 transports and HTTP request duration in an interactive ChatGPT card. View country-level attribution and share the completed measurement for explanation. Explore APNIC Labs global IPv6 adoption and country rankings with source dates, separately from eligible 17NAS country aggregates. The NAT card opens an external test guide; it does not determine NAT type or diagnose game disconnections. Failed probes remain unverified, and HTTP request duration is not ping latency. The application processes source addresses transiently for networking, country estimation and abuse protection; raw IP addresses, ASNs and cities are not included in app results. Infrastructure providers process network requests under their own policies.",
+        "privacyPolicyURL": "https://mcp.17nas.com/privacy.html",
+        "shortDescription": "IPv6 checks & global stats",
+        "supportURL": "https://mcp.17nas.com/support.html",
+        "termsOfServiceURL": "https://mcp.17nas.com/terms.html",
+        "websiteURL": "https://mcp.17nas.com/"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Browser IPv6 reachability; connect this MCP app in ChatGPT and allow the card to finish.",
+              "prompt": "Can my browser reach IPv6 services?",
+              "tools_triggered": "check_ipv6_connection (locale en)",
+              "expected_behavior": "Automatically runs the dedicated browser probe. Success requires the returned IPv6 support and IPv6 transport; timeouts and fetch failures remain unverified. Initial server values must not be described as completed measurements."
+            },
+            {
+              "description": "Browser country attribution; run in the same browser as the inline card.",
+              "prompt": "Which country is my network connection attributed to?",
+              "tools_triggered": "get_network_region (locale en)",
+              "expected_behavior": "Shows only the country from the browser request, or Unknown if unavailable. VPN/proxy caveat is visible. Never substitutes host location, IP, ASN or a precise city."
+            },
+            {
+              "description": "Combined network measurement and explicit conversation sharing.",
+              "prompt": "Check my current network connection and IPv6 reachability.",
+              "tools_triggered": "check_network (locale en)",
+              "expected_behavior": "Shows observed protocols and HTTP duration, country and probe status. After Explain results in chat is clicked, narration matches the sanitized completed measurement. No ping or NAT inference; failed probes remain unverified."
+            },
+            {
+              "description": "Global and valid country statistics; snapshot values are live and not fixed fixtures.",
+              "prompt": "Show global IPv6 adoption, the top five countries and territories, and Germany’s country statistics.",
+              "tools_triggered": "get_ipv6_statistics (country DE, locale en)",
+              "expected_behavior": "Shows global rate, five ranked entries when available, DE country rate/rank, APNIC source/date and countries-and-territories scope. Values match tool data and are within 0–100. Own samples below 300 are hidden and not replaced with APNIC data."
+            },
+            {
+              "description": "NAT guide boundary for multiplayer disconnections.",
+              "prompt": "I keep getting disconnected from multiplayer games. Could NAT restrictions be involved?",
+              "tools_triggered": "check_nat (locale en)",
+              "expected_behavior": "States NAT is untested, gives the external 17NAS NAT test link and asks for its result before interpreting NAT type. Does not claim NAT, CGNAT, packet loss, ping, jitter or the cause was measured."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Outside capability: no router controls. Explain how the user can check router settings without invoking diagnostic tools or claiming a change.",
+              "prompt": "Enable UPnP and open ports on my home router for me."
+            },
+            {
+              "description": "Outside capability: no arbitrary IP or port scanning. Do not invoke these browser checks as a substitute or claim a target was scanned.",
+              "prompt": "Scan the open ports and identify the ISP and city of 203.0.113.12."
+            },
+            {
+              "description": "Outside capability: no speed test. Explain that this app measures HTTP duration, not download/upload throughput; do not invoke tools or fabricate Mbps.",
+              "prompt": "Run a download and upload speed test and tell me my Mbps."
+            }
+          ]
+        },
+        "demo_recording_url": "https://youtu.be/mxxj5gtbUA4",
+        "commerce": false,
+        "commerce_description": "The plugin and the linked NAT test are free. No purchases, payments, or subscriptions are offered."
+      },
+      "publication": {
+        "release_notes": "Adds sanitized browser-result sharing into the conversation, explicit global APNIC adoption, clearer unverified probe and external NAT guide boundaries, localized error handling, and reduced request logging.",
+        "countries": []
+      }
+    }
+  }
+}

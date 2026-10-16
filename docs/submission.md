@@ -1,55 +1,66 @@
-# Directory submission draft
+# Directory submission preparation — 0.2.1
 
-Name: **IPv6 Checker & Stats** (Chinese: **IPv6 检测与统计**).
+Updated 2026-10-16 (Asia/Taipei). This is preparation evidence, not a claim of submission readiness or review approval.
 
-Short description: Check IPv6 support and explore country statistics, APNIC Labs global rankings.
+## Identity and publication choices
 
-Long description: Run an IPv6 test in a simple inline card. View APNIC Labs global IPv6 rankings alongside separately labeled 17NAS regional samples. Browser protocol connectivity and HTTP duration are displayed without exposing IP addresses or ASNs; NAT testing opens the separate 17NAS page.
+- Stable name: `ipv6-checker-stats`.
+- English display name: IPv6 Checker & Stats.
+- Subtitle: IPv6 checks & global stats (26 characters).
+- Intended category: Developer Tools; the existing Portal draft uses it.
+- Owner chose an individual identity. The Personal organization general settings show Verified and Individual / Approved (checked 2026-10-16). The exact public developer display name still needs reconciliation on the updated saved version; 17NAS is the current draft brand.
+- Owner chose all platform-permitted countries. `publication.countries: []` represents no package country restriction; check the imported setting.
+- Owner confirmed the plugin and linked NAT test are free, with no purchases/subscriptions. `review.commerce` is false.
+- English is the base listing language. Do not claim professional translations for pending locales.
 
-Keywords (关键词): IPv6, IPv6 test, IPv6 checker, network connectivity, network diagnostics, country rankings, network statistics, NAT test (IPv6检测, 网络诊断, 网络连通性, 国家统计, APNIC排行, NAT测试).
+## URLs and demo
 
-Desired category: Developer Tools, or Productivity if Developer Tools is not an available option. Verify the categories in the live form.
+- Website: https://mcp.17nas.com/
+- Support: https://mcp.17nas.com/support.html
+- Privacy: https://mcp.17nas.com/privacy.html
+- Terms: https://mcp.17nas.com/terms.html
+- Demo supplied by owner: https://youtu.be/mxxj5gtbUA4
 
-Icon: public/icon.svg (prepare required raster sizes after checking the actual submission form). Privacy and terms drafts: /privacy.html and /terms.html. Contact: hello@17nas.com; operator: jiahui zhang. The policy pages are served publicly; their draft operator-review status is visible. Confirm final policy content and provider logging before submission.
+All four product URLs returned 200 and their contents were checked on 2026-10-16. A Python default-user-agent request received 403 while curl received 200; unrestricted automated access is not established. The Portal's existing 0.2.0 draft reports a non-blocking failure to automatically assess the privacy policy.
 
-## Conversation Starters (开场白预设提示词)
+YouTube displays the correct title and Unlisted status but asks the unauthenticated browser to sign in to confirm it is not a bot. Playback was not verified; this is an access check blocker, not evidence that the video was made private. Do not bypass the challenge or mark reviewer playback as passed. The local v4 60-second video was checked for playback and complete card visibility before the owner uploaded it.
 
-在 OpenAI GPT Store / ChatGPT App 提审与配置后台直接填写的 4 个开场白按钮：
+## Upload source
 
-### 简体中文 (Chinese)
-1. **🎮 排查游戏联机与 NAT 类型**
-   - 触发提示词: 帮我排查游戏联机掉线问题，并说明如何测试 NAT 限制。
-   - 命中工具: `check_nat`
-2. **🌐 检测网络与 IPv6 连接**
-   - 触发提示词: 测一下我的网络连接和 IPv6 支持情况。
-   - 命中工具: `check_network` / `check_ipv6_connection`
-3. **📊 查看全球 IPv6 普及率排行**
-   - 触发提示词: 查看全球 IPv6 普及率与 APNIC 国家排行榜。
-   - 命中工具: `get_ipv6_statistics`
-4. **🔍 检测网络归属国家**
-   - 触发提示词: 测一下我当前网络连接的归属国家。
-   - 命中工具: `get_network_region`
+`submission/ipv6-checker-stats/` contains the portable manifest, one no-auth Streamable HTTP MCP declaration and supplied 1600×1600 PNG icons. Metadata includes the owner's video URL, publication/commerce choices and five positive/three negative cases. Do not upload root `.app.json` or private app bindings. Preserve existing Portal-generated bindings and connection state when updating the existing draft.
 
-### 英文 (English)
-1. **🎮 Troubleshoot game matchmaking & NAT type**
-   - Prompt: Show me how to check whether NAT restrictions could be involved in multiplayer game disconnections.
-   - Tool target: `check_nat`
-2. **🌐 Check network & IPv6 support**
-   - Prompt: Check my current network connection and IPv6 reachability.
-   - Tool target: `check_network` / `check_ipv6_connection`
-3. **📊 View global IPv6 rankings**
-   - Prompt: Show global IPv6 adoption statistics and APNIC country rankings.
-   - Tool target: `get_ipv6_statistics`
-4. **🔍 Check network country attribution**
-   - Prompt: Check the country attribution for my current network connection.
-   - Tool target: `get_network_region`
+The saved Portal plugin is `plugin_asdk_app_6ad0564497308191966b002b6dd55c37`, currently version0.2.0, Not submitted, Not published, MCP Configured. It is different from the development installation used to record the video. Do not create a duplicate plugin because those IDs differ.
 
-同时，MCP Server 已通过标准 `server.prompt()` 注册对应 Prompt 模板（`prompts/list` 与 `prompts/get`），客户端可自动发现。
+## Review case evidence
 
-## Competitor research status
+Five distinct positive cases and three out-of-scope negative cases are declared in the manifest. Natural prompts and expected tools/results are defined there.
 
-Requested searches: IPv6, network test, connectivity check. Automated directory access encountered an access challenge. No authoritative competitor names, ratings, duplicate-name result or directory availability have been recorded. Complete these searches in the authenticated directory, record the observation date and links, and distinguish unrelated GPTs from directory Apps. Never invent ratings or claim name uniqueness from an unsuccessful search.
+| Case | Current evidence |
+| --- | --- |
+| Dedicated IPv6 check | Not run against the exact saved Portal version; earlier browser probes remained unverified |
+| Browser country attribution | Not run as a separate case against the saved Portal version |
+| Combined network and result sharing | Passed in development ChatGPT recording: IPv4,319ms,KR,IPv6 unverified; matching follow-up summary. Saved-Portal case not run |
+| APNIC global/top-five/DE | Global/top-five passed in development recording. Exact DE case against saved Portal version not run |
+| NAT boundary | Passed as external guide in development recording. Exact saved-Portal case not run |
+| Router modification refusal | Not run |
+| Arbitrary-IP/port-scan refusal | Not run |
+| Download/upload speed-test refusal | Not run |
 
-## Review evidence still needed
+Live server tool annotations declare readOnlyHint true, openWorldHint true and destructiveHint false. Failed probes must remain unverified. A NAT guide is not a measured NAT type or root-cause diagnosis.
 
-Real ChatGPT inline card; language behavior; successful IPv6 probe; missing-country and insufficient-sample states; cache fallback and friendly error; 429; independent storage/data export; owner-reviewed policies; source/date/ranking scope visible. Submit only after deployment and launch gates are resolved. No review URL exists yet.
+## Remaining gates
+
+1. Confirm the exact verified individual developer name in the intended Personal organization/project.
+2. Verify actual playback of the supplied YouTube recording without reviewer-specific access problems.
+3. Resolve operator approval of the published privacy/terms drafts, provider processing/retention scope and support reception. Do not replace unknown practices with zero-retention claims.
+4. Update the existing draft ZIP, check imported metadata, preserved connection and latest MCP scan. Reupload can reset attestations.
+5. Run and record all eight cases against that exact saved version. Local harnesses and development recordings are not substitutes.
+6. The authorized developer personally completes legal/policy attestations and approves the concrete final submission. No attestations or final submit action have been taken.
+
+## GitHub and deployment
+
+PR: https://github.com/AmigaMeow/17nas-chatgpt-app/pull/2 (draft, unmerged).
+
+Production code is `d3b374854027ab6f3d99c139934f9204ab273c88`, service active, health0.2.1 as checked on 2026-10-16. This is separate from main and from any pending package metadata changes. No new production deployment is part of this documentation/package update.
+
+Official flow: https://developers.openai.com/plugins/deploy/submission
