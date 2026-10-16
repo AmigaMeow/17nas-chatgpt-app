@@ -99,8 +99,10 @@ npm run build
 npm test
 ```
 
-GitHub PR #2 remains a draft until the outstanding review gates are resolved; it has not been merged into `main`. Production is deployed separately at code SHA `7564cfafe0cca3b2a18c85f17bbede232539825b` (0.2.1), including the clarified NAT guide tool name. No public plugin release or review submission is implied by that deployment.
+GitHub PR #2 remains a draft until the outstanding review gates are resolved; it has not been merged into `main`. Production is deployed separately at code SHA `593a4005b75e9f426b790d70fb9cd6233440439d` (0.2.1), including the clarified NAT guide tool name. No public plugin release or review submission is implied by that deployment.
 
 Country flags are bundled from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT), with their license. No flag CDN is used.
 
 Cached development-client calls to `check_nat` remain compatible; only `get_nat_troubleshooting_guide` is advertised in the tool list.
+
+Owner-approved privacy and terms are effective October 16, 2026. The [English demo](https://mcp.17nas.com/demo.html) hosts the original approved 60-second 1080p recording without a login requirement.
