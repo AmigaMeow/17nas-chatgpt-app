@@ -89,7 +89,7 @@ cd submission/ipv6-checker-stats
 zip -r /tmp/ipv6-checker-stats-0.2.1.zip plugin.json mcp.json assets
 ```
 
-The user selected a verified individual identity, all platform-permitted countries and no commerce. The Personal organization shows Individual / Approved. The exact public display name and imported portal values must still be checked on the updated saved version before submission. Case definitions are five positive and three negative; definitions are not execution evidence. See [docs/submission.md](docs/submission.md) for status and remaining gates.
+The user selected a verified individual identity, all platform-permitted countries and no commerce. The Personal organization shows Individual / Approved. The saved publisher is jiahui zhang. All imported fields and the exported saved archive were verified against the candidate, and five positive/three negative live conversation cases passed against the configured production MCP endpoint. The owner personally confirmed the policy attestations. Package 0.2.1 was submitted on October 16, 2026; its detail page shows In review. See [docs/submission.md](docs/submission.md) and [case evidence](docs/review-cases-0.2.1.md) for scope and limitations.
 
 Previously completed local checks at the deployed source: TypeScript, build, 23 Vitest tests and browser harnesses. Real ChatGPT checks covered the combined card, measured-result sharing, APNIC statistics and NAT guidance. These do not establish all saved-portal review cases, a successful independent IPv6 path, native clients or review approval. Run checks only when appropriate to the requested verification scope:
 
@@ -99,7 +99,7 @@ npm run build
 npm test
 ```
 
-GitHub PR #2 remains a draft until the outstanding review gates are resolved; it has not been merged into `main`. Production is deployed separately at code SHA `593a4005b75e9f426b790d70fb9cd6233440439d` (0.2.1), including the clarified NAT guide tool name. No public plugin release or review submission is implied by that deployment.
+GitHub PR #2 remains a draft and has not been merged into `main`. Production is deployed separately at code SHA `593a4005b75e9f426b790d70fb9cd6233440439d` (0.2.1), including the clarified NAT guide tool name. The separate review submission is now In review; a public directory release has not been published.
 
 Country flags are bundled from [flag-icons](https://github.com/lipis/flag-icons), pinned to 7.2.3 (MIT), with their license. No flag CDN is used.
 
