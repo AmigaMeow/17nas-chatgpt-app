@@ -18,7 +18,7 @@
   "name": "ipv6-checker-stats",
   "repository": "https://github.com/AmigaMeow/17nas-chatgpt-app",
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "extensions": {
     "com.openai": {
       "interface": {
@@ -97,7 +97,7 @@
         "commerce_description": "The plugin and the linked NAT test are free. No purchases, payments, or subscriptions are offered."
       },
       "publication": {
-        "release_notes": "Adds sanitized browser-result sharing into the conversation, explicit global APNIC adoption, clearer unverified probe and external NAT guide boundaries, localized error handling, and reduced request logging. Renames the NAT guide tool to describe its actual purpose while preserving cached legacy calls.",
+        "release_notes": "Corrects per-tool open-world annotations to match the NAT guide and bounded statistics catalog, retains explicit boolean annotations for all five tools, and refreshes the app icon. Network measurements and privacy boundaries are unchanged.",
         "countries": []
       }
     }
