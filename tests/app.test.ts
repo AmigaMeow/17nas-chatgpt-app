@@ -59,9 +59,18 @@ describe('App MCP protocol',()=>{
  });
  it('returns explicit pending/untested boundaries and uses a fresh cached-resource identity',async()=>{
   const list=await rpc('tools/list');
+  const openWorldByName:Record<string,boolean>={
+   check_ipv6_connection:true,get_network_region:true,
+   get_nat_troubleshooting_guide:false,get_ipv6_statistics:false,check_network:true
+  };
+  expect(list.result.tools.map((tool:any)=>tool.name).sort()).toEqual(Object.keys(openWorldByName).sort());
   for(const tool of list.result.tools){
    expect(tool._meta.ui.resourceUri).toBe('ui://17nas/ipv6-card-v3.html');
-   expect(tool.annotations).toMatchObject({readOnlyHint:true,destructiveHint:false,openWorldHint:true});
+   expect(tool.annotations).toMatchObject({readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:openWorldByName[tool.name]});
+   for(const key of ['readOnlyHint','destructiveHint','idempotentHint','openWorldHint']){
+    expect(Object.hasOwn(tool.annotations,key)).toBe(true);
+    expect(typeof tool.annotations[key]).toBe('boolean');
+   }
   }
   const check=await rpc('tools/call',{name:'check_network',arguments:{locale:'en'}});
   expect(check.result.structuredContent.measurementStatus).toBe('pending');
